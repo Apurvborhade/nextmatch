@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Team      Team[]
+  teams     Team[]   @relation("TeamUsers")
+}
+
+model Team {
+  id             String        @id @default(uuid())
+  name           String        @unique
+  captainId      String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  achievement    Achievement[]
+  matchesAsTeam1 Match[]       @relation("Team1Matches")
+  matchesAsTeam2 Match[]       @relation("Team2Matches")
+  captain        User?         @relation(fields: [captainId], references: [id])
+  players        User[]        @relation("TeamUsers")
+}
+
+model Achievement {
+  id        String   @id @default(uuid())
+  title     String
+  date      DateTime
+  teamId    String
+  createdAt DateTime @default(now())
+  team      Team     @relation(fields: [teamId], references: [id])
+}
+
+model Match {
+  id        String   @id @default(uuid())
+  team1Id   String
+  team2Id   String
+  date      DateTime
+  location  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  team1     Team     @relation("Team1Matches", fields: [team1Id], references: [id])
+  team2     Team     @relation("Team2Matches", fields: [team2Id], references: [id])
+  Turf      Turf[]   @relation("MatchToTurf")
+}
+
+model Turf {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  location  String
+  capacity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  matches   Match[]  @relation("MatchToTurf")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
