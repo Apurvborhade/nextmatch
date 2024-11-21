@@ -33,6 +33,7 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid password");
                 }
 
+                
                 return user;
             },
         }),
@@ -75,6 +76,19 @@ export const authOptions: NextAuthOptions = {
         async redirect({ url, baseUrl }) {
             return baseUrl
         }
+    },
+    cookies: {
+        sessionToken: {
+            name: process.env.NODE_ENV === "production"
+                ? "__Secure-next-auth.session-token"
+                : "next-auth.session-token",
+            options: {
+                httpOnly: true,
+                sameSite: "strict",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
     },
     secret: process.env.NEXTAUTH_SECRET,
 };

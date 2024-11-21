@@ -19,10 +19,10 @@ export default function SignUp() {
 
     const { data: session, status } = useSession();
     useEffect(() => {
-        if(status === 'authenticated') {
-            router.push("/dashboard")
-        }
-        console.log(session)
+        // if(status === 'authenticated') {
+        //     router.push("/dashboard")
+        // }
+        // console.log(session)
     }, [session])
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -48,13 +48,15 @@ export default function SignUp() {
             });
             if (result?.error) {
                 setError(result.error);
+            } else {
+                router.push("/")
             }
         }
         setUserData(data)
 
     };
 
-    if(status === 'loading') 
+    if (status === 'loading')
         return <>Loading</>
     return (
         <div>

@@ -13,11 +13,7 @@ export default function SignIn() {
   const router = useRouter();
   const { data: session, status } = useSession()
 
-  useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/dashboard')
-    }
-  }, [session])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -31,8 +27,7 @@ export default function SignIn() {
     if (result?.error) {
       setError("Invalid credentials");
     } else {
-      // Redirect the user to the dashboard
-      router.push("/dashboard");
+      router.push("/")
     }
   };
 
