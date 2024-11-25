@@ -10,7 +10,10 @@ export async function apiMiddleware(req: NextRequest) {
     if (!token) {
         throw new AppError("Access Denied", 401, false);
     }
-    return NextResponse.next();
+
+    const res = NextResponse.next();
+    res.headers.set('X-User-Data', JSON.stringify(token || {}));
+    return res;
 }
 
 export const config = {

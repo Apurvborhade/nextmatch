@@ -9,14 +9,31 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   name      String
   email     String   @unique
   password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role?     @default(USER) 
+
+  age       Int?
+  position  String?
+  skills    Skill?   
+  bio       String?
+   
   Team      Team[]
   teams     Team[]   @relation("TeamUsers")
+}
+
+model Skill {
+  id         String @id @default(uuid())
+  userId     String @unique
+  user       User   @relation(fields: [userId], references: [id])
+  dribbling  Int    // Rating 1-10
+  passing    Int    // Rating 1-10
+  shooting   Int    // Rating 1-10
+  defending  Int    // Rating 1-10
+  speed      Int    // Rating 1-10
 }
 
 model Team {
@@ -25,7 +42,7 @@ model Team {
   captainId      String
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
-  achievement    Achievement[]
+  achievement    Achievement[] 
   matchesAsTeam1 Match[]       @relation("Team1Matches")
   matchesAsTeam2 Match[]       @relation("Team2Matches")
   captain        User?         @relation(fields: [captainId], references: [id])
@@ -38,7 +55,7 @@ model Achievement {
   date      DateTime
   teamId    String
   createdAt DateTime @default(now())
-  team      Team     @relation(fields: [teamId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id],onDelete: Cascade)
 }
 
 model Match {

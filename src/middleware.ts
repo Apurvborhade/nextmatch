@@ -10,7 +10,6 @@ const secret = process.env.AUTH_SECRET
 export async function middleware(request: NextRequest) {
     const token = await getToken({ req: request, secret });
     const url = request.nextUrl
-
     try {
 
         if (token && (

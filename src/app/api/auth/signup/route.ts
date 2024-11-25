@@ -12,7 +12,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     try {
         const { email, password, name } = await req.json();
 
-        console.log(email,password,name)
+        console.log(email, password, name)
         if (!email || !password || !name) {
             throw new AppError("Missing required fields", 400, false)
         }
@@ -38,8 +38,9 @@ export async function POST(req: Request, res: NextApiResponse) {
             },
         });
 
-        
-        return NextResponse .json({ message: "User created", user: newUser }, { status: 201 });    } catch (error) {
+
+        return NextResponse.json({ message: "User created", user: newUser }, { status: 201 });
+    } catch (error) {
         return errorHandler(error)
     }
 }
