@@ -14,26 +14,26 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      Role?     @default(USER) 
+  role      Role?    @default(USER)
 
-  age       Int?
-  position  String?
-  skills    Skill?   
-  bio       String?
-   
-  Team      Team[]
-  teams     Team[]   @relation("TeamUsers")
+  age      Int?
+  position String?
+  skills   Skill?
+  bio      String?
+
+  Team  Team[]
+  teams Team[] @relation("TeamUsers")
 }
 
 model Skill {
-  id         String @id @default(uuid())
-  userId     String @unique
-  user       User   @relation(fields: [userId], references: [id])
-  dribbling  Int    // Rating 1-10
-  passing    Int    // Rating 1-10
-  shooting   Int    // Rating 1-10
-  defending  Int    // Rating 1-10
-  speed      Int    // Rating 1-10
+  id        String @id @default(uuid())
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id])
+  dribbling Int // Rating 1-10
+  passing   Int // Rating 1-10
+  shooting  Int // Rating 1-10
+  defending Int // Rating 1-10
+  speed     Int // Rating 1-10
 }
 
 model Team {
@@ -42,11 +42,15 @@ model Team {
   captainId      String
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
-  achievement    Achievement[] 
+  achievement    Achievement[]
   matchesAsTeam1 Match[]       @relation("Team1Matches")
   matchesAsTeam2 Match[]       @relation("Team2Matches")
   captain        User?         @relation(fields: [captainId], references: [id])
   players        User[]        @relation("TeamUsers")
+
+  MatchRequestSender MatchRequest[] @relation("Sender")
+
+  MatchRequestReceiver MatchRequest[] @relation("Receiver")
 }
 
 model Achievement {
@@ -55,20 +59,21 @@ model Achievement {
   date      DateTime
   teamId    String
   createdAt DateTime @default(now())
-  team      Team     @relation(fields: [teamId], references: [id],onDelete: Cascade)
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
 model Match {
-  id        String   @id @default(uuid())
-  team1Id   String
-  team2Id   String
+  id        String      @id @default(uuid())
+  team1Id   String?
+  team2Id   String?
   date      DateTime
   location  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  team1     Team     @relation("Team1Matches", fields: [team1Id], references: [id])
-  team2     Team     @relation("Team2Matches", fields: [team2Id], references: [id])
-  Turf      Turf[]   @relation("MatchToTurf")
+  status    MatchStatus @default(active)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  team1     Team?       @relation("Team1Matches", fields: [team1Id], references: [id])
+  team2     Team?       @relation("Team2Matches", fields: [team2Id], references: [id])
+  Turf      Turf[]      @relation("MatchToTurf")
 }
 
 model Turf {
@@ -81,7 +86,31 @@ model Turf {
   matches   Match[]  @relation("MatchToTurf")
 }
 
+model MatchRequest {
+  id         String   @id @default(uuid())
+  senderId   String // Team sending the request
+  receiverId String // Team receiving the request
+  matchId    String? // Reference to the Match created after acceptance
+  createdAt  DateTime @default(now())
+  status     RequestStatus   @default(PENDING) // PENDING, ACCEPTED, REJECTED
+  message    String? // Optional message from sender
+
+  sender   Team @relation("Sender", fields: [senderId], references: [id])
+  receiver Team @relation("Receiver", fields: [receiverId], references: [id])
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 enum Role {
   USER
   ADMIN
+}
+
+enum MatchStatus {
+  active
+  completed
 }
