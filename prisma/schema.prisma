@@ -63,17 +63,18 @@ model Achievement {
 }
 
 model Match {
-  id        String      @id @default(uuid())
-  team1Id   String?
-  team2Id   String?
-  date      DateTime
-  location  String
-  status    MatchStatus @default(active)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  team1     Team?       @relation("Team1Matches", fields: [team1Id], references: [id])
-  team2     Team?       @relation("Team2Matches", fields: [team2Id], references: [id])
-  Turf      Turf[]      @relation("MatchToTurf")
+  id           String         @id @default(uuid())
+  team1Id      String?
+  team2Id      String?
+  date         DateTime
+  location     String
+  status       MatchStatus    @default(active)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  team1        Team?          @relation("Team1Matches", fields: [team1Id], references: [id])
+  team2        Team?          @relation("Team2Matches", fields: [team2Id], references: [id])
+  Turf         Turf[]         @relation("MatchToTurf")
+  MatchRequest MatchRequest[]
 }
 
 model Turf {
@@ -87,16 +88,16 @@ model Turf {
 }
 
 model MatchRequest {
-  id         String   @id @default(uuid())
+  id         String        @id @default(uuid())
   senderId   String // Team sending the request
   receiverId String // Team receiving the request
-  matchId    String? // Reference to the Match created after acceptance
-  createdAt  DateTime @default(now())
-  status     RequestStatus   @default(PENDING) // PENDING, ACCEPTED, REJECTED
+  matchId    String // Reference to the Match created after acceptance
+  createdAt  DateTime      @default(now())
+  status     RequestStatus @default(PENDING) // PENDING, ACCEPTED, REJECTED
   message    String? // Optional message from sender
-
-  sender   Team @relation("Sender", fields: [senderId], references: [id])
-  receiver Team @relation("Receiver", fields: [receiverId], references: [id])
+  match      Match         @relation(fields: [matchId], references: [id])
+  sender     Team          @relation("Sender", fields: [senderId], references: [id])
+  receiver   Team          @relation("Receiver", fields: [receiverId], references: [id])
 }
 
 enum RequestStatus {
