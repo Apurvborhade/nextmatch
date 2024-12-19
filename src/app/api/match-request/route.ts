@@ -1,5 +1,4 @@
 import prisma from "@/app/lib/prisma";
-import { NextResponse } from "next/server";
 import { AppError } from "@/utils/CustomError";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import sendMaillWithTemplate from "@/app/services/mail";

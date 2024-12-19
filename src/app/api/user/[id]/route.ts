@@ -3,7 +3,6 @@ import { AppError } from "@/utils/CustomError";
 import { NextResponse } from "next/server";
 
 import prisma from "@/app/lib/prisma";
-import { connect } from "http2";
 import sendResponse from "@/app/lib/responseWrapper";
 
 const secret = process.env.NEXTAUTH_SECRET;
@@ -15,7 +14,7 @@ export async function GET(req: Request) {
             include: { skills: true }
         });
 
-        return Response.json({ users: users })
+        return sendResponse("success", users)
     } catch (error) {
         return errorHandler(error)
     }

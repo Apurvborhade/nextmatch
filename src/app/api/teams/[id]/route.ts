@@ -2,7 +2,6 @@ import prisma from "@/app/lib/prisma";
 import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
-import { NextResponse } from "next/server";
 
 /**
  * @method PUT
@@ -58,7 +57,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
             },
         });
 
-        return NextResponse.json(updatedTeam);
+        return sendResponse("success",updatedTeam);
     } catch (error) {
         return errorHandler(error);
     }

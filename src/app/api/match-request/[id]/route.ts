@@ -3,7 +3,6 @@ import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import sendMaillWithTemplate from "@/app/services/mail";
 import { AppError } from "@/utils/CustomError";
-import { NextResponse } from "next/server";
 
 const templateId = 'd-5035cf2562d044bea35737e8cec904dc';
 /**

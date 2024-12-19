@@ -2,7 +2,6 @@ import prisma from "@/app/lib/prisma";
 import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
-import { NextResponse } from "next/server";
 
 /**
  * @method DELETE

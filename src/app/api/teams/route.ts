@@ -2,7 +2,6 @@ import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -61,7 +60,7 @@ export async function POST(req: Request) {
                 },
             },
         });
-        return NextResponse.json(newTeam, { status: 201 });
+        return sendResponse("success", newTeam);
     } catch (error) {
         return errorHandler(error);
     }
