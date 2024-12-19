@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import prisma from "@/app/lib/prisma";
 import { connect } from "http2";
+import sendResponse from "@/app/lib/responseWrapper";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -93,7 +94,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }):
             }
 
         })
-        return NextResponse.json({ message: "User Updated", user: updatedUser });
+        return sendResponse("success", updatedUser, "User Updated");
     } catch (error) {
         return errorHandler(error)
     }

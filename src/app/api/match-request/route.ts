@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { AppError } from "@/utils/CustomError";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import sendMaillWithTemplate from "@/app/services/mail";
+import sendResponse from "@/app/lib/responseWrapper";
 
 const templateId = 'd-c640f3eb09a9408c9301d406dd0c15ca';
 
@@ -83,7 +84,7 @@ export async function POST(req: Request) {
             rejectLink: `https://nextmatch.com/matches/reject?requestId=${matchRequest.id}`,
         });
 
-        return NextResponse.json({ message: "Match request sent", matchRequest });
+        return sendResponse("success", matchRequest,"Match request sent");
     } catch (error) {
         return errorHandler(error);
     }

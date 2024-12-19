@@ -1,4 +1,5 @@
 import prisma from "@/app/lib/prisma";
+import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import sendMaillWithTemplate from "@/app/services/mail";
 import { AppError } from "@/utils/CustomError";
@@ -89,18 +90,18 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
             });
             const sender = matchRequest.sender
             const receiver = matchRequest.receiver
-            await sendMaillWithTemplate(sender.captain?.email ? sender.captain.email:'', templateId, {
+            await sendMaillWithTemplate(sender.captain?.email ? sender.captain.email : '', templateId, {
                 team_captain_name: sender.captain?.name ?? '',
-                opponent_team_name:receiver.name,
-                match_date_time:match.date.toString(),
-                venue_name_address:match.location,
-                link_to_match_details:`/match/${match.id}`,
-                contact_info_or_support_link:'apurvaborhadee@outlook.com' 
+                opponent_team_name: receiver.name,
+                match_date_time: match.date.toString(),
+                venue_name_address: match.location,
+                link_to_match_details: `/match/${match.id}`,
+                contact_info_or_support_link: 'apurvaborhadee@outlook.com'
             });
-            return NextResponse.json({ message: "Match Updated", match });
+            return sendResponse("success", match, "Match Updated");
         }
 
-        return NextResponse.json({ message: `Match request ${status.toLowerCase()}` });
+        return sendResponse("success", {}, `Match request ${status.toLowerCase()}`);
     } catch (error) {
         return errorHandler(error);
     }

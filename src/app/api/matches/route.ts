@@ -1,4 +1,5 @@
 import prisma from "@/app/lib/prisma";
+import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
 import { NextResponse } from "next/server";
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
             },
         });
 
-        return NextResponse.json({ success: true, match });
+        return sendResponse("success", match);
     } catch (error) {
         return errorHandler(error);
     }

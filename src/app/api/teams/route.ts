@@ -1,3 +1,4 @@
+import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
 import { PrismaClient } from "@prisma/client";
@@ -100,7 +101,7 @@ export async function GET(req: Request) {
             throw new AppError("No Teams Available", 404, false);
         }
 
-        return NextResponse.json(teams, { status: 200 });
+        return sendResponse("success", teams);
     } catch (error) {
         return errorHandler(error);
     }

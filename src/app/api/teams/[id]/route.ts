@@ -1,4 +1,5 @@
 import prisma from "@/app/lib/prisma";
+import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
 import { NextResponse } from "next/server";
@@ -98,7 +99,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
             where: { id: teamId },
         });
 
-        return NextResponse.json({ success: true, deletedTeam });
+        return sendResponse("success", deletedTeam);
     } catch (error) {
         return errorHandler(error);
     }
