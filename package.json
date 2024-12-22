@@ -2,6 +2,7 @@
   "name": "nextmatch",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@sendgrid/mail": "^8.1.4",
+    "amqplib": "^0.10.5",
     "bcrypt": "^5.1.1",
     "next": "15.0.3",
     "next-auth": "^4.24.10",
@@ -19,6 +21,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.6",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
