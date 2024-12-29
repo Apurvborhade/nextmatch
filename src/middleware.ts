@@ -10,17 +10,19 @@ const secret = process.env.AUTH_SECRET
 export async function middleware(request: NextRequest) {
     const token = await getToken({ req: request, secret });
     const url = request.nextUrl
+
     try {
 
         if (token && (
             url.pathname.startsWith('/auth/signin') ||
             url.pathname.startsWith('/auth/signup')
         )) {
-            console.log(token)
+
             return NextResponse.redirect(new URL('/', request.url))
         }
 
         if (!token && url.pathname === "/") {
+            console.log("not Authenticated")
             return NextResponse.redirect(new URL('/auth/signin', request.url))
         }
 

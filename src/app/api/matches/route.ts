@@ -33,7 +33,8 @@ import { AppError } from "@/utils/CustomError";
  *    }
  */
 export async function POST(req: Request) {
-    const { date, location, team1Id, status } = await req.json();
+    const body = await req.json();
+    const { date, location, team1Id, team2Id, status } = body
     const userdata = req.headers.get("x-user-data") as string; // Optional user metadata
 
     try {
@@ -52,11 +53,39 @@ export async function POST(req: Request) {
                 date,
                 location,
                 team1Id,
+                team2Id: team2Id ? team2Id : null,
                 status,
             },
         });
 
         return sendResponse("success", match);
+    } catch (error) {
+        return errorHandler(error);
+    }
+}
+
+
+/**
+ * GET /api/matches
+ * Retrieves all matches from the database.
+ * 
+ * @returns {Promise<Response>} 200 - JSON object containing success confirmation and array of matches.
+ *    Example:
+ *    {
+ *      success: true,
+ *      matches: [{
+ *        id: "matchId",
+ *        date: "2024-12-18T00:00:00Z", 
+ *        location: "Match Location",
+ *        team1Id: "team1Id",
+ *        status: "pending"
+ *      }]
+ *    }
+ */
+export async function GET() {
+    try {
+        const matches = await prisma.match.findMany();
+        return sendResponse("success", matches);
     } catch (error) {
         return errorHandler(error);
     }

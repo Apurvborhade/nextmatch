@@ -16,7 +16,7 @@ export default function SignIn() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    console.log("signin")
     // Call NextAuth's signIn method for credentials login
     const result = await signIn("credentials", {
       redirect: false,
@@ -24,9 +24,11 @@ export default function SignIn() {
       password,
     });
 
+    console.log(result)
     if (result?.error) {
       setError("Invalid credentials");
     } else {
+      console.log("push")
       router.push("/")
     }
   };

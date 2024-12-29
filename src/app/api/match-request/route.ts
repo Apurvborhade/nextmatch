@@ -3,6 +3,9 @@ import { AppError } from "@/utils/CustomError";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import sendMaillWithTemplate from "@/app/services/mail";
 import sendResponse from "@/app/lib/responseWrapper";
+import { matchRequestNotificationData } from "@/app/lib/notificationConfig";
+import { publishMessage } from "@/app/lib/rabbitmq/publisher";
+import RABBITMQ_CONFIG from "@/app/lib/rabbitmq/config";
 
 const templateId = 'd-c640f3eb09a9408c9301d406dd0c15ca';
 
@@ -65,25 +68,30 @@ export async function POST(req: Request) {
                 senderId,
                 receiverId,
                 message,
+                matchId,
                 status: "PENDING",
             },
         });
 
         // Send email to the captain of the receiver team
-        const captainMail: string = receiver.captain?.email ? receiver.captain?.email : '';
+        const captainMail = receiver.captain?.email as string
 
-        await sendMaillWithTemplate(captainMail, templateId, {
-            userName: sender.captain?.name ? sender.captain?.name : '',
-            team1Name: sender.name,
-            team2Name: receiver.name,
-            matchDate: match.date.toString(),
-            matchTime: "6:00 PM",
-            matchLocation: match.location,
-            acceptLink: `https://nextmatch.com/matches/accept?requestId=${matchRequest.id}`,
-            rejectLink: `https://nextmatch.com/matches/reject?requestId=${matchRequest.id}`,
-        });
+        // Push Notifications
+        const notification = await matchRequestNotificationData(receiver?.captain?.id as string, true)
+        await publishMessage(RABBITMQ_CONFIG.queues.notificationQueue, notification);
 
-        return sendResponse("success", matchRequest,"Match request sent");
+        // await sendMaillWithTemplate(captainMail, templateId, {
+        //     userName: sender.captain?.name ? sender.captain?.name : '',
+        //     team1Name: sender.name,
+        //     team2Name: receiver.name,
+        //     matchDate: match.date.toString(),
+        //     matchTime: "6:00 PM",
+        //     matchLocation: match.location,
+        //     acceptLink: `https://nextmatch.com/matches/accept?requestId=${matchRequest.id}`,
+        //     rejectLink: `https://nextmatch.com/matches/reject?requestId=${matchRequest.id}`,
+        // });
+
+        return sendResponse("success", matchRequest, "Match request sent");
     } catch (error) {
         return errorHandler(error);
     }
