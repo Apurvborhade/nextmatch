@@ -33,29 +33,61 @@ import { AppError } from "@/utils/CustomError";
  *    }
  */
 export async function POST(req: Request) {
-    const body = await req.json();
-    const { date, location, team1Id, team2Id, status } = body
-    const userdata = req.headers.get("x-user-data") as string; // Optional user metadata
-
     try {
+        const body = await req.json();
+        const { date, location, team1Id, team2Id, status } = body;
+
         // Validate required fields
         if (!date || !location) {
-            throw new AppError("Please Enter all details", 404, false);
+            throw new AppError("Please provide both date and location", 400, false);
         }
 
         if (!team1Id) {
-            throw new AppError("Please add the team 1", 403, false);
+            throw new AppError("Team 1 ID is required", 400, false);
+        }
+
+        // Validate date format
+        const newDate = new Date(date);
+        if (isNaN(newDate.getTime())) {
+            throw new AppError("Invalid date format", 400, false);
+        }
+
+        // Validate teams exist
+        const team1 = await prisma.team.findUnique({
+            where: { id: team1Id }
+        });
+
+        if (!team1) {
+            throw new AppError("Team 1 not found", 404, false);
+        }
+
+        if (team2Id) {
+            const team2 = await prisma.team.findUnique({
+                where: { id: team2Id }
+            });
+
+            if (!team2) {
+                throw new AppError("Team 2 not found", 404, false);
+            }
+
+            if (team1Id === team2Id) {
+                throw new AppError("Team 1 and Team 2 cannot be the same", 400, false);
+            }
         }
 
         // Create the match
         const match = await prisma.match.create({
             data: {
-                date,
+                date: newDate,
                 location,
                 team1Id,
-                team2Id: team2Id ? team2Id : null,
-                status,
+                team2Id: team2Id || null,
+                status: status || 'active'
             },
+            include: {
+                team1: true,
+                team2: true
+            }
         });
 
         return sendResponse("success", match);

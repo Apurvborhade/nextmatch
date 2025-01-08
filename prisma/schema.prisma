@@ -8,50 +8,46 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  email     String   @unique
-  password  String
-  role      Role?    @default(USER)
-
-  age      Int?
-  position String?
-  skills   Skill?
-  bio      String?
-
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  password     String
+  role         Role?          @default(USER)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  age          Int?
+  bio          String?
+  position     String?
+  Notification Notification[]
+  skills       Skill?
   Team         Team[]
   teams        Team[]         @relation("TeamUsers")
-  Notification Notification[]
 }
 
 model Skill {
   id        String @id @default(uuid())
   userId    String @unique
+  dribbling Int
+  passing   Int
+  shooting  Int
+  defending Int
+  speed     Int
   user      User   @relation(fields: [userId], references: [id])
-  dribbling Int // Rating 1-10
-  passing   Int // Rating 1-10
-  shooting  Int // Rating 1-10
-  defending Int // Rating 1-10
-  speed     Int // Rating 1-10
 }
 
 model Team {
-  id             String        @id @default(uuid())
-  name           String        @unique
-  captainId      String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  achievement    Achievement[]
-  matchesAsTeam1 Match[]       @relation("Team1Matches")
-  matchesAsTeam2 Match[]       @relation("Team2Matches")
-  captain        User?         @relation(fields: [captainId], references: [id])
-  players        User[]        @relation("TeamUsers")
-
-  MatchRequestSender MatchRequest[] @relation("Sender")
-
+  id                   String         @id @default(uuid())
+  name                 String         @unique
+  captainId            String
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  achievement          Achievement[]
+  matchesAsTeam1       Match[]        @relation("Team1Matches")
+  matchesAsTeam2       Match[]        @relation("Team2Matches")
   MatchRequestReceiver MatchRequest[] @relation("Receiver")
+  MatchRequestSender   MatchRequest[] @relation("Sender")
+  captain              User           @relation(fields: [captainId], references: [id])
+  players              User[]         @relation("TeamUsers")
 }
 
 model Achievement {
@@ -67,15 +63,15 @@ model Match {
   id           String         @id @default(uuid())
   team1Id      String?
   team2Id      String?
-  date         DateTime
+  date         DateTime     
   location     String
-  status       MatchStatus    @default(active)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  status       MatchStatus    @default(active)
   team1        Team?          @relation("Team1Matches", fields: [team1Id], references: [id])
   team2        Team?          @relation("Team2Matches", fields: [team2Id], references: [id])
-  Turf         Turf[]         @relation("MatchToTurf")
   MatchRequest MatchRequest[]
+  Turf         Turf[]         @relation("MatchToTurf")
 }
 
 model Turf {
@@ -90,15 +86,15 @@ model Turf {
 
 model MatchRequest {
   id         String        @id @default(uuid())
-  senderId   String // Team sending the request
-  receiverId String // Team receiving the request
-  matchId    String // Reference to the Match created after acceptance
+  senderId   String
+  receiverId String
+  matchId    String
   createdAt  DateTime      @default(now())
-  status     RequestStatus @default(PENDING) // PENDING, ACCEPTED, REJECTED
-  message    String? // Optional message from sender
+  status     RequestStatus @default(PENDING)
+  message    String?
   match      Match         @relation(fields: [matchId], references: [id])
-  sender     Team          @relation("Sender", fields: [senderId], references: [id])
   receiver   Team          @relation("Receiver", fields: [receiverId], references: [id])
+  sender     Team          @relation("Sender", fields: [senderId], references: [id])
 }
 
 model Notification {

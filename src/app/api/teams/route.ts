@@ -30,11 +30,13 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-
-        const { name, players, captainId } = body;
-
+        
+        const { name, players, captainId, achievement, matchesAsTeam1, matchesAsTeam2 } = body;
+        
+        console.log(typeof body)
         if (!body || typeof body !== 'object') {
-            throw new AppError("Payload must be a valid object.", 400, false);
+            console.log("error in !body")
+            throw new AppError("Payloadb must be a valid object.", 400, false);
         }
         if (!name || !captainId) {
             throw new AppError("Enter all details", 400, false);
@@ -94,7 +96,7 @@ export async function POST(req: Request) {
  */
 export async function GET(req: Request) {
     try {
-        const teams = await prisma.team.findMany();
+        const teams = await prisma.team.findMany({include:{matchesAsTeam1:true,players:true,MatchRequestReceiver:true}});
 
         if (!teams || teams.length == 0) {
             throw new AppError("No Teams Available", 404, false);
