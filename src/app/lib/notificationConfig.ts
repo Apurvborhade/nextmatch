@@ -1,19 +1,49 @@
-export async function matchRequestNotificationData(userId: string, sent: boolean): Promise<{
+export enum MatchRequestNotificationType {
+    SENT = 'SENT',
+    ACCEPTED = 'ACCEPTED',
+    DECLINED = 'DECLINED'
+}
+
+
+export async function matchRequestNotificationData(user: object, sender: object, type: MatchRequestNotificationType, matchDetails: object,matchRequestId:string): Promise<{
     title: string;
     description: string;
-    userId:string;
+    sender: object;
+    user: object;
+    status: MatchRequestNotificationType;
+    matchDetails: object;
+    matchRequestId:string;
 }> {
-    if (sent) {
+
+    if (type === MatchRequestNotificationType.SENT) {
         return {
-            title: `Match Request was sent By ${userId}`,
+            title: `Match Request was sent `,
             description: `Match Request Check`,
-            userId,
+            sender,
+            user,
+            status: MatchRequestNotificationType.SENT,
+            matchDetails,
+            matchRequestId
+        }
+    } else if (type === MatchRequestNotificationType.ACCEPTED) {
+        return {
+            title: `Match Request was Accepted `,
+            description: `Match Request accepted`,
+            sender,
+            user,
+            status: MatchRequestNotificationType.ACCEPTED,
+            matchDetails,
+            matchRequestId
         }
     } else {
         return {
-            title: `Match Request was Accepted By ${userId}`,
+            title: `Match Request was Declined `,
             description: `Match Request accepted`,
-            userId
+            sender,
+            user,
+            status: MatchRequestNotificationType.DECLINED,
+            matchDetails,
+            matchRequestId
         }
     }
 }

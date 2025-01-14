@@ -1,4 +1,7 @@
+import { matchRequestNotificationData, MatchRequestNotificationType } from "@/app/lib/notificationConfig";
 import prisma from "@/app/lib/prisma";
+import RABBITMQ_CONFIG from "@/app/lib/rabbitmq/config";
+import { publishMessage } from "@/app/lib/rabbitmq/publisher";
 import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import sendMaillWithTemplate from "@/app/services/mail";
@@ -73,7 +76,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
                     sender: {
                         include: { captain: true }
                     },
-                    receiver: true
+                    receiver: {
+                        include: { captain: true }
+                    }
                 },
                 data: { status },
             });
@@ -82,21 +87,17 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
             const match = await prisma.match.update({
                 where: { id: matchId },
                 data: {
-                    team1Id: matchRequest.receiverId,
-                    team2Id: matchRequest.senderId,
+                    team1Id: matchRequest.senderId,
+                    team2Id: matchRequest.receiverId,
                     date: new Date(), // Example: Use the current date or a provided one
                 },
             });
-            const sender = matchRequest.sender
-            const receiver = matchRequest.receiver
-            await sendMaillWithTemplate(sender.captain?.email ? sender.captain.email : '', templateId, {
-                team_captain_name: sender.captain?.name ?? '',
-                opponent_team_name: receiver.name,
-                match_date_time: match.date.toString(),
-                venue_name_address: match.location,
-                link_to_match_details: `/match/${match.id}`,
-                contact_info_or_support_link: 'apurvaborhadee@outlook.com'
-            });
+            const sender = matchRequest.receiver // Now The reciever becomes sender when updating 
+            const receiver = matchRequest.sender // And here the sender of matchRequest becomes reciever when accepting or declining request
+
+            const notification = await matchRequestNotificationData(receiver, sender, MatchRequestNotificationType.ACCEPTED, match, matchRequest?.id);
+            await publishMessage(RABBITMQ_CONFIG.queues.notificationQueue, notification)
+
             return sendResponse("success", match, "Match Updated");
         }
 

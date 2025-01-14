@@ -3,7 +3,7 @@ import { AppError } from "@/utils/CustomError";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import sendMaillWithTemplate from "@/app/services/mail";
 import sendResponse from "@/app/lib/responseWrapper";
-import { matchRequestNotificationData } from "@/app/lib/notificationConfig";
+import { matchRequestNotificationData, MatchRequestNotificationType } from "@/app/lib/notificationConfig";
 import { publishMessage } from "@/app/lib/rabbitmq/publisher";
 import RABBITMQ_CONFIG from "@/app/lib/rabbitmq/config";
 
@@ -77,19 +77,10 @@ export async function POST(req: Request) {
         const captainMail = receiver.captain?.email as string
 
         // Push Notifications
-        const notification = await matchRequestNotificationData(receiver?.captain?.id as string, true)
+        const notification = await matchRequestNotificationData(receiver, sender, MatchRequestNotificationType.SENT, match, matchRequest?.id)
         await publishMessage(RABBITMQ_CONFIG.queues.notificationQueue, notification);
 
-        // await sendMaillWithTemplate(captainMail, templateId, {
-        //     userName: sender.captain?.name ? sender.captain?.name : '',
-        //     team1Name: sender.name,
-        //     team2Name: receiver.name,
-        //     matchDate: match.date.toString(),
-        //     matchTime: "6:00 PM",
-        //     matchLocation: match.location,
-        //     acceptLink: `https://nextmatch.com/matches/accept?requestId=${matchRequest.id}`,
-        //     rejectLink: `https://nextmatch.com/matches/reject?requestId=${matchRequest.id}`,
-        // });
+
 
         return sendResponse("success", matchRequest, "Match request sent");
     } catch (error) {

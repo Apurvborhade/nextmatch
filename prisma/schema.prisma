@@ -63,7 +63,7 @@ model Match {
   id           String         @id @default(uuid())
   team1Id      String?
   team2Id      String?
-  date         DateTime     
+  date         DateTime
   location     String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

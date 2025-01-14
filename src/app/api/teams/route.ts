@@ -30,9 +30,9 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        
+
         const { name, players, captainId, achievement, matchesAsTeam1, matchesAsTeam2 } = body;
-        
+
         console.log(typeof body)
         if (!body || typeof body !== 'object') {
             console.log("error in !body")
@@ -44,6 +44,18 @@ export async function POST(req: Request) {
         if (!players || players.length == 0) {
             throw new AppError("Need at least 1 player", 400, false);
         }
+
+        // Check if all players exist in the database
+        const existingPlayers = await prisma.user.findMany({
+            where: {
+                id: {
+                    in: players
+                }
+            }
+        });
+
+
+        if (existingPlayers.length !== players.length) throw new AppError(`Some Players do not exists`, 400, false);
 
         const alreadyExists = await prisma.team.findUnique({
             where: { name },
@@ -96,7 +108,7 @@ export async function POST(req: Request) {
  */
 export async function GET(req: Request) {
     try {
-        const teams = await prisma.team.findMany({include:{matchesAsTeam1:true,players:true,MatchRequestReceiver:true}});
+        const teams = await prisma.team.findMany({ include: { matchesAsTeam1: true, players: true, MatchRequestReceiver: true } });
 
         if (!teams || teams.length == 0) {
             throw new AppError("No Teams Available", 404, false);
