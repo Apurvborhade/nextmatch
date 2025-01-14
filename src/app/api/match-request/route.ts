@@ -62,6 +62,35 @@ export async function POST(req: Request) {
             throw new AppError("Cannot Find match", 404, false);
         }
 
+        // Check if a match request already exists between these teams for this match
+        const existingRequest = await prisma.matchRequest.findFirst({
+            where: {
+                AND: [
+                    { matchId: matchId },
+                    {
+                        OR: [
+                            {
+                                AND: [
+                                    { senderId: senderId },
+                                    { receiverId: receiverId }
+                                ]
+                            },
+                            {
+                                AND: [
+                                    { senderId: receiverId },
+                                    { receiverId: senderId }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        if (existingRequest) {
+            throw new AppError("A match request already exists between these teams for this match", 409, false);
+        }
+        
         // Create match request
         const matchRequest = await prisma.matchRequest.create({
             data: {
@@ -73,8 +102,7 @@ export async function POST(req: Request) {
             },
         });
 
-        // Send email to the captain of the receiver team
-        const captainMail = receiver.captain?.email as string
+
 
         // Push Notifications
         const notification = await matchRequestNotificationData(receiver, sender, MatchRequestNotificationType.SENT, match, matchRequest?.id)

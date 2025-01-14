@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { apiMiddleware } from './app/middleware/api.middleware'
 import { errorHandler } from './app/middleware/errorHandler'
+import rateLimitMiddleware from './app/middleware/rateLimiter'
 export { default } from "next-auth/middleware"
 
 const secret = process.env.AUTH_SECRET
@@ -10,7 +11,9 @@ const secret = process.env.AUTH_SECRET
 export async function middleware(request: NextRequest) {
     const token = await getToken({ req: request, secret });
     const url = request.nextUrl
+    
 
+    
     try {
 
         if (token && (
@@ -30,9 +33,11 @@ export async function middleware(request: NextRequest) {
 
         // Protected Route
         if (url.pathname.startsWith('/api')) {
+            rateLimitMiddleware(request);
             return await apiMiddleware(request)
         }
 
+        
         return NextResponse.next();
     } catch (error: any) {
         return errorHandler(error)

@@ -48,6 +48,7 @@ export async function POST(req: Request) {
 
         // Validate date format
         const newDate = new Date(date);
+
         if (isNaN(newDate.getTime())) {
             throw new AppError("Invalid date format", 400, false);
         }
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
         });
 
         if (!team1) {
-            throw new AppError("Team 1 not found", 404, false);
+            throw new AppError("You must join a Team first", 404, false);
         }
 
         if (team2Id) {

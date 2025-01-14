@@ -57,7 +57,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
             },
         });
 
-        return sendResponse("success",updatedTeam);
+        return sendResponse("success", updatedTeam);
     } catch (error) {
         return errorHandler(error);
     }
