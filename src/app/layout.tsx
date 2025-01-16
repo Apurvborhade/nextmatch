@@ -4,8 +4,11 @@ import "./globals.css";
 import { Provider } from "./Provider";
 import { initializeServices } from '@/app/lib/init';
 import { ServiceInitializer } from "@/ServiceInitializer";
+import { Header } from "./components/Header";
+import { Sidebar } from "./components/Sidebar";
+import { Inter } from "next/font/google";
 
-
+const inter = Inter({ subsets: ['latin'] })
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,7 +41,20 @@ export default async function RootLayout({
 
         <Provider>
           <ServiceInitializer />
-          {children}
+          <div className={`min-h-screen  bg-background ${inter.className}`}>
+            <Header />
+            <div className="flex pt-16">
+              <main className="overflow-auto p-4 md:p-8 w-5/6">
+                <div className="container mx-auto">
+
+                  {children}
+                </div>
+              </main>
+
+              <Sidebar />
+
+            </div>
+          </div>
         </Provider>
       </body>
     </html>
