@@ -8,17 +8,7 @@ import sendResponse from "@/app/lib/responseWrapper";
 const secret = process.env.NEXTAUTH_SECRET;
 
 
-export async function GET(req: Request) {
-    try {
-        const users = await prisma.user.findMany({
-            include: { skills: true }
-        });
 
-        return sendResponse("success", users)
-    } catch (error) {
-        return errorHandler(error)
-    }
-}
 interface Skill {
     dribbling: number,
     passing: number,
