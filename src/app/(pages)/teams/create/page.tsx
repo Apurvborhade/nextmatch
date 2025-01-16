@@ -20,33 +20,50 @@ import { TimePeriodSelect } from "@/components/ui/period-select";
 import { Period } from "@/components/ui/time-picker-utils";
 
 
+const users = [
+    { id: 1, name: "apurva" },
+    { id: 2, name: "shriyash" },
+]
 
-
+enum queryType {
+    player = "player",
+    captain = "captain"
+}
 
 
 const formSchema = z.object({
     name: z.string().min(2).max(50),
-    location: z.string().min(2).max(50),
+    captain: z.object({
+        id: z.number(),
+        name: z.string(),
+    }),
     players: z.array(z.string()).min(0).max(10),
-    date: z.string()
+    date: z.string(),
+    searchPlayerQuery: z.string().min(2).max(50),
+    searchCaptainQuery: z.string().min(2).max(50),
 })
 export default function CreateMatch() {
     const [date, setDate] = React.useState<Date>()
     const [period, setPeriod] = React.useState<Period>("PM");
+    const [searchPlayers, setSearchPlayers] = React.useState<{ id: number, name: string }[]>([]);
+    const [searchCaptain, setSearchCaptain] = React.useState<{ id: number, name: string }[]>([]);
     const minuteRef = React.useRef<HTMLInputElement>(null);
     const hourRef = React.useRef<HTMLInputElement>(null);
     const secondRef = React.useRef<HTMLInputElement>(null);
     const periodRef = React.useRef<HTMLButtonElement>(null);
     const defaultPlayersValue: string[] = []
 
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            location: "",
+            captain: {},
             players: defaultPlayersValue,
-            date: ""
+            date: "",
+            searchPlayerQuery: "",
+            searchCaptainQuery: ""
         },
     })
 
@@ -60,7 +77,25 @@ export default function CreateMatch() {
         // ✅ This will be type-safe and validated.
         console.log(values)
         form.reset();
-        console.log(fields)
+
+    }
+
+    const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>, type: queryType) => {
+        if (type === queryType.player) {
+            form.setValue('searchPlayerQuery', e.currentTarget.value.trim())
+            search(form.getValues().searchPlayerQuery, queryType.player)
+        } else {
+            form.setValue('searchCaptainQuery', e.currentTarget.value.trim())
+            search(form.getValues().searchCaptainQuery, queryType.captain)
+        }
+    }
+    const search = (query: string, type: queryType) => {
+        const searchResult = users.filter((user) => user.name.includes(query))
+        if (type === queryType.player) {
+            setSearchPlayers(searchResult)
+        } else {
+            setSearchCaptain(searchResult)
+        }
     }
 
     return (
@@ -87,56 +122,110 @@ export default function CreateMatch() {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="location"
-                            render={({ field }) => (
-                                <FormItem className="w-full">
-                                    <FormLabel>Location</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="HK Turf" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        <Popover>
+
+                            <FormField
+                                control={form.control}
+                                name="captain"
+                                render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel>Captain</FormLabel>
+                                        <FormControl>
+                                            <div className="flex justify-start items-center">
+                                                <Search className="absolute ml-2 opacity-40 scale-75" />
+                                                <PopoverTrigger className="w-full">
+                                                    <Input placeholder="Captain of team" className="rounded-full pl-10" onChange={(e) => handleQueryChange(e, queryType.captain)}
+                                                    /></PopoverTrigger>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                        <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()} className="p-2">
+                                            {searchCaptain.length === 0 ? (
+                                                "Please Enter atleast 2 Characters"
+                                            ) : (
+
+                                                <ul>
+                                                    {searchCaptain.map((player) => (
+                                                        <Button className="w-full flex justify-start" variant={"ghost"} key={player.name} onClick={(e) => {
+                                                            form.setValue("captain", player)
+                                                        }}>{player.name}</Button>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </PopoverContent>
+                                        <Table className="w-auto">
+                                            <TableBody>
+
+                                                {Object.keys(form.getValues().captain).length === 0 && form.getValues().captain.constructor === Object ? (
+
+                                                    null
+
+                                                ) : (
+                                                    <TableRow className="gap-44 rounded-full shadow-none border-none grid grid-cols-4" key={form.getValues().captain.id}>
+                                                        <TableCell className="font-medium">{form.getValues().captain.id}</TableCell>
+                                                        <TableCell>{form.getValues().captain.name}</TableCell>
+                                                        <TableCell>Defense</TableCell>
+                                                        <TableCell className="text-right text-red-600 cursor-pointer ml-auto"><Trash2 /></TableCell>
+                                                    </TableRow>
+                                                )}
+
+                                            </TableBody>
+                                        </Table>
+                                    </FormItem>
+                                )}
+                            />
+                        </Popover>
                     </div>
                     <div className="flex gap-5">
-                        <FormField
-                            control={form.control}
-                            name="players"
-                            render={({ field }) => (
-                                <FormItem className="w-full">
-                                    <FormLabel>Players</FormLabel>
-                                    <FormControl>
-                                        <div className="flex justify-start items-center">
-                                            <Search className="absolute ml-2 opacity-40 scale-75" />
-                                            <Input placeholder="Add Players" className="rounded-full pl-10"
-                                                onKeyDown={(e) => {
-                                                    if (e.key === "Enter" && e.currentTarget.value.trim()) {
-                                                        append(e.currentTarget.value.trim());
-                                                        e.currentTarget.value = "";
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                    <Table className="w-auto">
-                                        <TableBody>
-                                            {form.getValues().players.map((player) => (
-                                                <TableRow className="gap-44 rounded-full shadow-none border-none grid grid-cols-4" key={player}>
-                                                    <TableCell className="font-medium">1.</TableCell>
-                                                    <TableCell>{player}</TableCell>
-                                                    <TableCell>Defense</TableCell>
-                                                    <TableCell className="text-right text-red-600 cursor-pointer ml-auto"><Trash2 /></TableCell>
-                                                </TableRow>
-                                            ))}
+                        <Popover >
+                            <FormField
+                                control={form.control}
+                                name="players"
 
-                                        </TableBody>
-                                    </Table>
-                                </FormItem>
-                            )} />
+                                render={({ field }) => (
+                                    <FormItem className="w-full">
+                                        <FormLabel>Players</FormLabel>
+                                        <FormControl>
+                                            <div className="flex justify-start items-center">
+                                                <Search className="absolute ml-2 opacity-40 scale-75" />
+                                                <PopoverTrigger className="w-full">
+                                                    <Input placeholder="Add Players" className="rounded-full pl-10" onChange={(e) => handleQueryChange(e, queryType.player)}
+                                                    /></PopoverTrigger>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                        <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()} className="p-2">
+                                            {searchPlayers.length === 0 ? (
+                                                "Please Enter atleast 2 Characters"
+                                            ) : (
+
+                                                <ul>
+                                                    {searchPlayers.map((player) => (
+                                                        <Button className="w-full flex justify-start" variant={"ghost"} key={player.name} onClick={(e) => {
+                                                            append(e.currentTarget.innerText.trim());
+
+
+                                                        }}>{player.name}</Button>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </PopoverContent>
+                                        <Table className="w-auto">
+                                            <TableBody>
+                                                {form.getValues().players.map((player) => (
+                                                    <TableRow className="gap-44 rounded-full shadow-none border-none grid grid-cols-4" key={player}>
+                                                        <TableCell className="font-medium">1.</TableCell>
+                                                        <TableCell>{player}</TableCell>
+                                                        <TableCell>Defense</TableCell>
+                                                        <TableCell className="text-right text-red-600 cursor-pointer ml-auto"><Trash2 /></TableCell>
+                                                    </TableRow>
+                                                ))}
+
+                                            </TableBody>
+                                        </Table>
+                                    </FormItem>
+                                )} />
+                        </Popover>
                         <FormField
                             control={form.control}
                             name="date"
@@ -242,9 +331,9 @@ export default function CreateMatch() {
                             )} />
                     </div>
                 </form>
-                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>Submit</Button>
+                <Button className="mt-10" type="submit" onClick={form.handleSubmit(onSubmit)}>Submit</Button>
             </Form>
 
-        </div>
+        </div >
     )
 }
