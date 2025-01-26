@@ -40,7 +40,7 @@ export default async function RootLayout({
       >
 
         <Provider>
-          <ServiceInitializer />
+          {/* <ServiceInitializer /> */}
                   {children}
         </Provider>
       </body>

@@ -18,24 +18,25 @@ import { TimePickerInput } from "@/components/ui/time-picker-input";
 import { TimePeriodSelect } from "@/components/ui/period-select";
 import { Period } from "@/components/ui/time-picker-utils";
 import SearchAddField from "@/app/components/SearchAddField";
+import { Card } from "@/components/ui/card";
 
 
 
-
-enum queryType {
-    player = "player",
-    captain = "captain"
+export type Player = {
+    id: string,
+    name: string
 }
+const PlayerObject = z.object({
+    id: z.string(),
+    name: z.string()
+})
 
 
 const formSchema = z.object({
     name: z.string().min(2).max(50),
-    captain: z.object({
-        id: z.number(),
-        name: z.string(),
-    }),
-    players: z.array(z.string()).min(0).max(10),
-    date: z.string(),
+
+    players: z.array(PlayerObject),
+    date: z.date(),
 
 })
 export default function CreateMatch() {
@@ -47,17 +48,15 @@ export default function CreateMatch() {
     const hourRef = React.useRef<HTMLInputElement>(null);
     const secondRef = React.useRef<HTMLInputElement>(null);
     const periodRef = React.useRef<HTMLButtonElement>(null);
-    const defaultPlayersValue: string[] = []
+    const defaultPlayersValue: Player[] = []
 
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            captain: {},
             players: defaultPlayersValue,
-            date: "",
-
+            date: new Date(),
         },
     })
 
@@ -69,164 +68,166 @@ export default function CreateMatch() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
+        console.log("Submit")
         console.log(values)
+        setDate(undefined)
         form.reset();
-
     }
 
 
     return (
-        <div className="match-create-form">
-            <h2 className="text-2xl font-bold mb-4">Create Match</h2>
-            <Separator />
+        <div className="w-full flex justify-center items-center">
+            <Card className="md:w-1/2 w-full p-10">
+                <div className="match-create-form">
+                    <h2 className="text-2xl font-bold mb-4">Create Team</h2>
+                    <Separator />
 
-            <Form {...form}>
-                <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
-                    <div className="flex gap-5 my-5">
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem className="w-full">
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="shadcn" {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Match Name
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Popover>
+                    <Form {...form} getFieldState={form.getFieldState}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
 
+
+                            <div className="flex gap-5 my-5">
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Name</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Madrid" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Team Name
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                            </div>
                             <FormField
                                 control={form.control}
-                                name="captain"
-                                render={() => (
-                                    <SearchAddField form={form} append={append} isCaptain={true}/>
-                                )}
-                            />
-                        </Popover>
-                    </div>
-                    <div className="flex gap-5">
-                        <Popover >
-                            <FormField
-                                control={form.control}
-                                name="players"
-                                render={() => (
-                                    <SearchAddField form={form} append={append} isCaptain={false} />
-                                )} />
-                        </Popover>
-                        <FormField
-                            control={form.control}
-                            name="date"
-                            render={({ field }) => (
-                                <FormItem className="w-full flex-col">
-                                    <FormLabel>Date</FormLabel>
-                                    <br />
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "min-w-[240px] justify-start text-left font-normal",
-                                                    !date && "text-muted-foreground"
-                                                )}
+                                name="date"
+                                render={({ field }) => (
+                                    <FormItem className="w-full flex-col">
+                                        <FormLabel>Date</FormLabel>
+                                        <br />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "min-w-[240px] justify-start text-left font-normal",
+                                                        !date && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon />
+                                                    {date ? format(date, "PPP ") : <span>Pick a date</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent
+                                                align="start"
+                                                className="flex w-auto flex-col space-y-2 p-2"
                                             >
-                                                <CalendarIcon />
-                                                {date ? format(date, "PPP ") + `${hourRef.current?.value} : ${minuteRef.current?.value}` : <span>Pick a date</span>}
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                            align="start"
-                                            className="flex w-auto flex-col space-y-2 p-2"
-                                        >
-                                            <Select
-                                                onValueChange={(value) =>
-                                                    setDate(addDays(new Date(), parseInt(value)))
-                                                }
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select" />
-                                                </SelectTrigger>
-                                                <SelectContent position="popper">
-                                                    <SelectItem value="0">Today</SelectItem>
-                                                    <SelectItem value="1">Tomorrow</SelectItem>
-                                                    <SelectItem value="3">In 3 days</SelectItem>
-                                                    <SelectItem value="7">In a week</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                            <div className="rounded-md border">
-                                                <Calendar mode="single" selected={date} onSelect={setDate} {...field} />
-                                                <div className="flex items-end gap-2">
-                                                    <div className="grid gap-1 text-center">
-                                                        <Label htmlFor="hours" className="text-xs">
-                                                            Hours
-                                                        </Label>
-                                                        <TimePickerInput
-                                                            picker="12hours"
-                                                            period={period}
-                                                            date={date}
-                                                            setDate={setDate}
-                                                            ref={hourRef}
-                                                            onRightFocus={() => minuteRef.current?.focus()}
-                                                        />
-                                                    </div>
-                                                    <div className="grid gap-1 text-center">
-                                                        <Label htmlFor="minutes" className="text-xs">
-                                                            Minutes
-                                                        </Label>
-                                                        <TimePickerInput
-                                                            picker="minutes"
-                                                            id="minutes12"
-                                                            date={date}
-                                                            setDate={setDate}
-                                                            ref={minuteRef}
-                                                            onLeftFocus={() => hourRef.current?.focus()}
-                                                            onRightFocus={() => secondRef.current?.focus()}
-                                                        />
-                                                    </div>
-                                                    <div className="grid gap-1 text-center">
-                                                        <Label htmlFor="seconds" className="text-xs">
-                                                            Seconds
-                                                        </Label>
-                                                        <TimePickerInput
-                                                            picker="seconds"
-                                                            id="seconds12"
-                                                            date={date}
-                                                            setDate={setDate}
-                                                            ref={secondRef}
-                                                            onLeftFocus={() => minuteRef.current?.focus()}
-                                                            onRightFocus={() => periodRef.current?.focus()}
-                                                        />
-                                                    </div>
-                                                    <div className="grid gap-1 text-center">
-                                                        <Label htmlFor="period" className="text-xs">
-                                                            Period
-                                                        </Label>
-                                                        <TimePeriodSelect
-                                                            period={period}
-                                                            setPeriod={setPeriod}
-                                                            date={date}
-                                                            setDate={setDate}
-                                                            ref={periodRef}
-                                                            onLeftFocus={() => secondRef.current?.focus()}
-                                                        />
-                                                    </div>
+                                                <Select
+                                                    onValueChange={(value) =>
+                                                        setDate(addDays(new Date(), parseInt(value)))
+                                                    }
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select" />
+                                                    </SelectTrigger>
+                                                    <SelectContent position="popper">
+                                                        <SelectItem value="0">Today</SelectItem>
+                                                        <SelectItem value="1">Tomorrow</SelectItem>
+                                                        <SelectItem value="3">In 3 days</SelectItem>
+                                                        <SelectItem value="7">In a week</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <div className="rounded-md border">
+                                                    <FormControl>
+                                                        <Calendar mode="single" selected={date} onSelect={setDate} {...field} />
+                                                    </FormControl>
+
                                                 </div>
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                    </div>
-                </form>
-                <Button className="mt-10" type="submit" onClick={form.handleSubmit(onSubmit)}>Submit</Button>
-            </Form>
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            <div className="flex gap-5">
+                                <Popover >
+                                    <FormField
+                                        control={form.control}
+                                        name="players"
+                                        render={() => (
+                                            <SearchAddField form={form} append={append} isCaptain={false} />
+                                        )} />
+                                </Popover>
+                            </div>
+                            <div className="flex items-end gap-2">
+                                <div className="grid gap-1 text-center">
+                                    <Label htmlFor="hours" className="text-xs">
+                                        Hours
+                                    </Label>
+                                    <TimePickerInput
+                                        picker="12hours"
+                                        period={period}
+                                        date={date}
+                                        setDate={setDate}
+                                        ref={hourRef}
+                                        onRightFocus={() => minuteRef.current?.focus()}
+                                    />
+                                </div>
+                                <div className="grid gap-1 text-center">
+                                    <Label htmlFor="minutes" className="text-xs">
+                                        Minutes
+                                    </Label>
+                                    <TimePickerInput
+                                        picker="minutes"
+                                        id="minutes12"
+                                        date={date}
+                                        setDate={setDate}
+                                        ref={minuteRef}
+                                        onLeftFocus={() => hourRef.current?.focus()}
+                                        onRightFocus={() => secondRef.current?.focus()}
+                                    />
+                                </div>
+                                <div className="grid gap-1 text-center">
+                                    <Label htmlFor="seconds" className="text-xs">
+                                        Seconds
+                                    </Label>
+                                    <TimePickerInput
+                                        picker="seconds"
+                                        id="seconds12"
+                                        date={date}
+                                        setDate={setDate}
+                                        ref={secondRef}
+                                        onLeftFocus={() => minuteRef.current?.focus()}
+                                        onRightFocus={() => periodRef.current?.focus()}
+                                    />
+                                </div>
+                                <div className="grid gap-1 text-center">
+                                    <Label htmlFor="period" className="text-xs">
+                                        Period
+                                    </Label>
+                                    <TimePeriodSelect
+                                        period={period}
+                                        setPeriod={setPeriod}
+                                        date={date}
+                                        setDate={setDate}
+                                        ref={periodRef}
+                                        onLeftFocus={() => secondRef.current?.focus()}
+                                    />
+                                </div>
+                            </div>
+                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>Submit</Button>
+                        </form>
+                    </Form>
 
-        </div >
+                </div >
+            </Card>
+        </div>
+
     )
 }
