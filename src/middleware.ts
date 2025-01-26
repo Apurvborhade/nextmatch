@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
             url.pathname.startsWith('/auth/signup')
         )) {
 
-            return NextResponse.redirect(new URL('/', request.url))
+            return NextResponse.redirect(new URL('/matches', request.url))
         }
 
         if (!token && url.pathname === "/") {

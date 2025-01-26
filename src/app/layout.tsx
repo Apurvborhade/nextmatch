@@ -41,20 +41,7 @@ export default async function RootLayout({
 
         <Provider>
           <ServiceInitializer />
-          <div className={`min-h-screen  bg-background ${inter.className}`}>
-            <Header />
-            <div className="flex pt-16">
-              <main className="overflow-auto p-4 md:p-8 w-5/6">
-                <div className="container mx-auto">
-
                   {children}
-                </div>
-              </main>
-
-              <Sidebar />
-
-            </div>
-          </div>
         </Provider>
       </body>
     </html>
