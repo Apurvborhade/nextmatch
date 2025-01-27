@@ -16,7 +16,6 @@ import { Player } from '../(pages)/teams/create/page'
 const SearchAddField = ({ form, append }: {
     form: UseFormReturn<{
         name: string;
-        date: Date;
         players: Player[];
     }, any, undefined>,
     append: UseFieldArrayAppend<any, any>,
