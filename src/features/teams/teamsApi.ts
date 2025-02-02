@@ -5,11 +5,13 @@ export const teamsApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "/api/teams" }),
     endpoints: (builder) => ({
         createTeam: builder.mutation({
-            query: ({name,players}) => ({
+            query: (body) => ({
                 url: '/',
                 method: 'POST',
                 body: {
-                    name,players
+                    name:body.name,
+                    players:body.players,
+                    captainId:body.captainId
                 }
             }),
             transformResponse: (response: { data: any }, meta, arg) => response.data,

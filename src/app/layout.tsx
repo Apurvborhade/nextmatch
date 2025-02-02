@@ -7,6 +7,7 @@ import { ServiceInitializer } from "@/ServiceInitializer";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { Inter } from "next/font/google";
+import UserInitializer from "./components/UserInitializer";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -41,6 +42,7 @@ export default async function RootLayout({
 
         <Provider>
           {/* <ServiceInitializer /> */}
+          
                   {children}
         </Provider>
       </body>

@@ -20,6 +20,11 @@ import { Period } from "@/components/ui/time-picker-utils";
 import SearchAddField from "@/app/components/SearchAddField";
 import { Card } from "@/components/ui/card";
 import { useCreateTeamMutation } from "@/features/teams/teamsApi";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "@reduxjs/toolkit/query";
+import { Loader } from "@/app/components/Loader";
 
 
 
@@ -40,12 +45,13 @@ const formSchema = z.object({
 
 export default function CreateMatch() {
     const defaultPlayersValue: Player[] = []
+    const { user } = useSelector((state: RootState) => state.user)
+    const {id:captainId} = user
+    const [createTeam, { data, isLoading, error, isError }] = useCreateTeamMutation()
 
-    const [createTeam, { data, isLoading, error,isError }] = useCreateTeamMutation()
-    
     useEffect(() => {
-        console.log(data,error,isError)
-    },[error,isError])
+        console.log(data, error, isError)
+    }, [error, isError])
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -63,17 +69,28 @@ export default function CreateMatch() {
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Submit ✅")
-
         const playersId = values.players.map((player) => player.id)
-        createTeam({ name: values.name, playersId })
-        if(data != undefined) {
+        createTeam({
+            name: values.name,
+            captainId,
+            players: playersId,
+        })
+    }
+    useEffect(() => {
+        if (data != undefined) {
+            toast("Team created successfull", {
+                style: {
+                    color: "white",
+                    backgroundColor: "green"
+                }
+            })
             form.reset();
         }
-    }
+    },[data])
 
     return (
         <div className="w-full flex justify-center items-center">
+            <Toaster />
             <Card className="md:w-1/2 w-full p-10">
                 <div className="match-create-form">
                     <h2 className="text-2xl font-bold mb-4">Create Team</h2>
@@ -118,7 +135,7 @@ export default function CreateMatch() {
                             </div>
 
                             {error ? <p className="text-red-700">{'message' in error ? error.message : null}</p> : null}
-                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>Submit</Button>
+                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>{isLoading ? (<Loader />) : 'Submit'}</Button>
                         </form>
                     </Form>
 

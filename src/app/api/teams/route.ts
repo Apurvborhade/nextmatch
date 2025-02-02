@@ -33,6 +33,7 @@ export async function POST(req: Request) {
 
         const { name, players, captainId, achievement, matchesAsTeam1, matchesAsTeam2 } = body;
 
+        console.log(body)
 
         if (!body || typeof body !== 'object') {
             console.log("error in !body")

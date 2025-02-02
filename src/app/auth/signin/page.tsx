@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Loader } from "@/app/components/Loader";
+import { storeUser } from "@/features/users/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -21,9 +23,9 @@ export default function SignIn() {
   const router = useRouter();
   const { data: session, status } = useSession()
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     setIsLoading(true)
     // Call NextAuth's signIn method for credentials login
     const result = await signIn("credentials", {
@@ -31,7 +33,6 @@ export default function SignIn() {
       email,
       password,
     });
-
 
     setIsLoading(false)
     if (result?.error) {

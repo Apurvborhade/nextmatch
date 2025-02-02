@@ -10,7 +10,7 @@ import { useDebounce } from '../hooks/useDebounce'
 import { AppDispatch } from '../store'
 import { useDispatch } from 'react-redux'
 import { usersApi } from '@/features/users/usersApi'
-import { Player } from '../(pages)/teams/create/page'
+import { Player } from '../pages/teams/create/page'
 import { Loader } from './Loader'
 
 
