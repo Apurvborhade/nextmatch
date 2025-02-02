@@ -12,13 +12,14 @@ import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import React from "react";
+import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { TimePickerInput } from "@/components/ui/time-picker-input";
 import { TimePeriodSelect } from "@/components/ui/period-select";
 import { Period } from "@/components/ui/time-picker-utils";
 import SearchAddField from "@/app/components/SearchAddField";
 import { Card } from "@/components/ui/card";
+import { useCreateTeamMutation } from "@/features/teams/teamsApi";
 
 
 
@@ -34,16 +35,17 @@ const PlayerObject = z.object({
 
 const formSchema = z.object({
     name: z.string().min(2).max(50),
-    players: z.array(PlayerObject),
+    players: z.array(PlayerObject).min(1, "Must Contain Atleast one Player"),
 })
+
 export default function CreateMatch() {
-
-
-
-
-   
     const defaultPlayersValue: Player[] = []
 
+    const [createTeam, { data, isLoading, error,isError }] = useCreateTeamMutation()
+    
+    useEffect(() => {
+        console.log(data,error,isError)
+    },[error,isError])
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -58,13 +60,17 @@ export default function CreateMatch() {
         control: form.control,
         name: "players"
     })
+
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log("Submit ✅")
-        console.log(values)
-        form.reset();
-    }
 
+        const playersId = values.players.map((player) => player.id)
+        createTeam({ name: values.name, playersId })
+        if(data != undefined) {
+            form.reset();
+        }
+    }
 
     return (
         <div className="w-full flex justify-center items-center">
@@ -96,18 +102,22 @@ export default function CreateMatch() {
                                 />
 
                             </div>
-                            
+
                             <div className="flex gap-5">
                                 <Popover >
                                     <FormField
                                         control={form.control}
                                         name="players"
                                         render={() => (
-                                            <SearchAddField form={form} append={append} isCaptain={false} />
-                                    )} />
+                                            <>
+                                                <SearchAddField form={form} append={append} isCaptain={false} />
+                                                {/* <FormMessage /> */}
+                                            </>
+                                        )} />
                                 </Popover>
                             </div>
-                            
+
+                            {error ? <p className="text-red-700">{'message' in error ? error.message : null}</p> : null}
                             <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>Submit</Button>
                         </form>
                     </Form>

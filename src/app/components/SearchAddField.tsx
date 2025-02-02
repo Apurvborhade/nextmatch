@@ -11,6 +11,7 @@ import { AppDispatch } from '../store'
 import { useDispatch } from 'react-redux'
 import { usersApi } from '@/features/users/usersApi'
 import { Player } from '../(pages)/teams/create/page'
+import { Loader } from './Loader'
 
 
 const SearchAddField = ({ form, append }: {
@@ -65,7 +66,7 @@ const SearchAddField = ({ form, append }: {
                         "Player Not Found"
                     ) : null}
                     {fetchingPlayer && (
-                        <LoaderCircle />
+                        <Loader className='' />
                     )}
                     <ul>
                         {users.map((player) => (
