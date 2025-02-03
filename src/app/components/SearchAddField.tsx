@@ -10,7 +10,7 @@ import { useDebounce } from '../hooks/useDebounce'
 import { AppDispatch } from '../store'
 import { useDispatch } from 'react-redux'
 import { usersApi } from '@/features/users/usersApi'
-import { Player } from '../pages/teams/create/page'
+import { Player } from '@/app/(pages)/teams/create/page'
 import { Loader } from './Loader'
 
 
@@ -24,7 +24,7 @@ const SearchAddField = ({ form, append }: {
 }) => {
     const [users, setUsers] = React.useState<{ id: number, name: string }[]>([])
     const [input, setInput] = React.useState<string>("")
-    const [fetchingPlayer, setFetchingPlayer] = React.useState<Boolean>(false)
+    const [fetchingPlayer, setFetchingPlayer] = React.useState<boolean>(false)
     const dispatch = useDispatch<AppDispatch>();
     const query = useDebounce(input, 300)
 
