@@ -1,6 +1,6 @@
 'use client'
 import { storeUser } from '@/features/users/userSlice'
-import { RootState } from '@reduxjs/toolkit/query'
+import { RootState } from '@/app/store'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

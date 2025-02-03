@@ -16,7 +16,7 @@ interface Skill {
     defending: number,
     speed: number
 }
-export async function PUT(req: Request, { params }: { params: { id: string } }): Promise<NextResponse> {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }): Promise<NextResponse> {
     const { id } = await params;
     const payload = await req.json()
     const { age, position, bio, skills } = payload;

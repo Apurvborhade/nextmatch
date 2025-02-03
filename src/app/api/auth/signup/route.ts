@@ -1,13 +1,12 @@
 // pages/api/auth/signup.ts
 
-import { NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import prisma from "../../../lib/prisma";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: Request) {
     try {
         const { email, password, name } = await req.json();
 

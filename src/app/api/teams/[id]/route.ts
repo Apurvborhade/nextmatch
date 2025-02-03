@@ -29,7 +29,7 @@ import { AppError } from "@/utils/CustomError";
  *      ]
  *    }
  */
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const { id: teamId } = await params;
     const { title, date } = await req.json();
     try {
@@ -81,7 +81,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
  *      deletedTeam: { id: "teamId", name: "Team Name", ... }
  *    }
  */
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const { id: teamId } = await params;
     try {
         // Fetch the team by ID to ensure it exists
