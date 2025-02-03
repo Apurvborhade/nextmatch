@@ -1,4 +1,4 @@
-import { MatchCards } from "../../app/components/MatchCards";
+import { MatchCards } from "@/app/components/MatchCards";
 
 export default function Matches() {
     return (

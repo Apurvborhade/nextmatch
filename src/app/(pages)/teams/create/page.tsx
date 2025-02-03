@@ -6,24 +6,15 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { addDays, format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
+import { Popover } from "@/components/ui/popover";
 import React, { useEffect } from "react";
-import { Label } from "@/components/ui/label";
-import { TimePickerInput } from "@/components/ui/time-picker-input";
-import { TimePeriodSelect } from "@/components/ui/period-select";
-import { Period } from "@/components/ui/time-picker-utils";
 import SearchAddField from "@/app/components/SearchAddField";
 import { Card } from "@/components/ui/card";
 import { useCreateTeamMutation } from "@/features/teams/teamsApi";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/app/store";
 import { Loader } from "@/app/components/Loader";
 
 
@@ -46,12 +37,16 @@ const formSchema = z.object({
 export default function CreateMatch() {
     const defaultPlayersValue: Player[] = []
     const { user } = useSelector((state: RootState) => state.user)
-    const {id:captainId} = user
+    const [captainId,setCaptainId] = React.useState<string | undefined>("")
     const [createTeam, { data, isLoading, error, isError }] = useCreateTeamMutation()
 
     useEffect(() => {
         console.log(data, error, isError)
     }, [error, isError])
+
+    useEffect(() => {
+        setCaptainId(user?.id as string)
+    },[user])
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -135,7 +130,7 @@ export default function CreateMatch() {
                             </div>
 
                             {error ? <p className="text-red-700">{'message' in error ? error.message : null}</p> : null}
-                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>{isLoading ? (<Loader />) : 'Submit'}</Button>
+                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>{isLoading ? (<Loader className=""/>) : 'Submit'}</Button>
                         </form>
                     </Form>
 
