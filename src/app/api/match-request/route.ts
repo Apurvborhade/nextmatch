@@ -1,13 +1,11 @@
 import prisma from "@/app/lib/prisma";
 import { AppError } from "@/utils/CustomError";
 import { errorHandler } from "@/app/middleware/errorHandler";
-import sendMaillWithTemplate from "@/app/services/mail";
 import sendResponse from "@/app/lib/responseWrapper";
 import { matchRequestNotificationData, MatchRequestNotificationType } from "@/app/lib/notificationConfig";
 import { publishMessage } from "@/app/lib/rabbitmq/publisher";
 import RABBITMQ_CONFIG from "@/app/lib/rabbitmq/config";
 
-const templateId = 'd-c640f3eb09a9408c9301d406dd0c15ca';
 
 /**
  * @method POST

@@ -1,11 +1,9 @@
 
-import localFont from "next/font/local";
 import "../globals.css";
 
 
 import { Inter } from "next/font/google";
 import { Header } from "@/app/components/Header";
-import { Sidebar } from "@/app/components/Sidebar";
 import React from "react";
 import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";

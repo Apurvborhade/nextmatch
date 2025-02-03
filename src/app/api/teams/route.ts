@@ -31,9 +31,9 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
 
-        const { name, players, captainId, achievement, matchesAsTeam1, matchesAsTeam2 } = body;
+        const { name, players, captainId } = body;
 
-        console.log(body)
+        console.log(bodyp)
 
         if (!body || typeof body !== 'object') {
             console.log("error in !body")
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
  *      }
  *    ]
  */
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const teams = await prisma.team.findMany({ include: { matchesAsTeam1: true, players: true, MatchRequestReceiver: true } });
 

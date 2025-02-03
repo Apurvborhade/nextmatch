@@ -2,9 +2,9 @@
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Popover } from "@/components/ui/popover";
 import React, { useEffect } from "react";
@@ -57,7 +57,7 @@ export default function CreateMatch() {
         },
     })
 
-    const { fields, append, remove } = useFieldArray<any, any>({
+    const { append } = useFieldArray({
         control: form.control,
         name: "players"
     })

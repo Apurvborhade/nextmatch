@@ -20,7 +20,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }):
     const { id } = await params;
     const payload = await req.json()
     const { age, position, bio, skills } = payload;
-    let { dribbling, passing, shooting, defending, speed } = skills as Skill
+    const { dribbling, passing, shooting, defending, speed } = skills as Skill
 
     console.log(typeof passing)
 

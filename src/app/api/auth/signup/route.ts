@@ -1,10 +1,9 @@
 // pages/api/auth/signup.ts
 
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import prisma from "../../../lib/prisma";
 import { errorHandler } from "@/app/middleware/errorHandler";
-import { signIn } from "next-auth/react";
 import { AppError } from "@/utils/CustomError";
 import { NextResponse } from "next/server";
 
