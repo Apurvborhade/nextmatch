@@ -9,9 +9,9 @@ export const teamsApi = createApi({
                 url: '/',
                 method: 'POST',
                 body: {
-                    name:body.name,
-                    players:body.players,
-                    captainId:body.captainId
+                    name: body.name,
+                    players: body.players,
+                    captainId: body.captainId
                 }
             }),
             transformResponse: (response: { data: any }, meta, arg) => response.data,
@@ -45,7 +45,8 @@ export const teamsApi = createApi({
                 meta,
                 arg,
             ) => response.status,
-        })
+        }),
+        
     })
 })
 

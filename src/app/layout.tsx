@@ -2,14 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Provider } from "./Provider";
-import { initializeServices } from '@/app/lib/init';
-import { ServiceInitializer } from "@/ServiceInitializer";
-import { Header } from "./components/Header";
-import { Sidebar } from "./components/Sidebar";
-import { Inter } from "next/font/google";
-import UserInitializer from "./components/UserInitializer";
+import { cookies } from "next/headers";
+import { decode } from "next-auth/jwt";
+import UserInitializer from "@/app/components/UserInitializer";
 
-const inter = Inter({ subsets: ['latin'] })
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,6 +30,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('next-auth.session-token')?.value
+  const user = await decode({
+    token,
+    secret: process.env.NEXTAUTH_SECRET as string
+  })
   return (
     <html lang="en">
       <body
@@ -42,8 +44,9 @@ export default async function RootLayout({
 
         <Provider>
           {/* <ServiceInitializer /> */}
-          
-                  {children}
+          <UserInitializer user={user} />
+
+          {children}
         </Provider>
       </body>
     </html>
