@@ -21,8 +21,8 @@ import { AppError } from "@/utils/CustomError";
  *      message: "Match Deleted"
  *    }
  */
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
     try {
         // Check if the match exists

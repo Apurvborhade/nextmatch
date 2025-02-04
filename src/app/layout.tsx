@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Provider } from "./Provider";
-import { initializeServices } from '@/app/lib/init';
-import { ServiceInitializer } from "@/ServiceInitializer";
-
+import { cookies } from "next/headers";
+import { decode } from "next-auth/jwt";
+import UserInitializer from "@/app/components/UserInitializer";
 
 
 const geistSans = localFont({
@@ -30,6 +30,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('next-auth.session-token')?.value
+  const user = await decode({
+    token,
+    secret: process.env.NEXTAUTH_SECRET as string
+  })
   return (
     <html lang="en">
       <body
@@ -37,7 +43,9 @@ export default async function RootLayout({
       >
 
         <Provider>
-          <ServiceInitializer />
+          {/* <ServiceInitializer /> */}
+          <UserInitializer user={user} />
+
           {children}
         </Provider>
       </body>

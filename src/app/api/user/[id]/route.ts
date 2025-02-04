@@ -8,17 +8,7 @@ import sendResponse from "@/app/lib/responseWrapper";
 const secret = process.env.NEXTAUTH_SECRET;
 
 
-export async function GET(req: Request) {
-    try {
-        const users = await prisma.user.findMany({
-            include: { skills: true }
-        });
 
-        return sendResponse("success", users)
-    } catch (error) {
-        return errorHandler(error)
-    }
-}
 interface Skill {
     dribbling: number,
     passing: number,
@@ -26,11 +16,11 @@ interface Skill {
     defending: number,
     speed: number
 }
-export async function PUT(req: Request, { params }: { params: { id: string } }): Promise<NextResponse> {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }): Promise<NextResponse> {
     const { id } = await params;
     const payload = await req.json()
     const { age, position, bio, skills } = payload;
-    let { dribbling, passing, shooting, defending, speed } = skills as Skill
+    const { dribbling, passing, shooting, defending, speed } = skills as Skill
 
     console.log(typeof passing)
 
@@ -98,3 +88,4 @@ export async function PUT(req: Request, { params }: { params: { id: string } }):
         return errorHandler(error)
     }
 } 
+
