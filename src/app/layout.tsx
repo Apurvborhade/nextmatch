@@ -5,6 +5,7 @@ import { Provider } from "./Provider";
 import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";
 import UserInitializer from "@/app/components/UserInitializer";
+import { Toaster } from "@/components/ui/sonner";
 
 
 const geistSans = localFont({
@@ -45,7 +46,7 @@ export default async function RootLayout({
         <Provider>
           {/* <ServiceInitializer /> */}
           <UserInitializer user={user} />
-
+          <Toaster />
           {children}
         </Provider>
       </body>

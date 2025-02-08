@@ -2,6 +2,8 @@ import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
 import { PrismaClient } from "@prisma/client";
+import { headers } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -61,7 +63,7 @@ export async function POST(req: Request) {
         const alreadyExists = await prisma.team.findUnique({
             where: { name },
         });
-        
+
         if (alreadyExists) {
             throw new AppError("Team with this name already exists", 409, false);
         }
@@ -108,14 +110,26 @@ export async function POST(req: Request) {
  *      }
  *    ]
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
+    const headersList = await headers()
+    const userData = JSON.parse(await headersList.get('X-User-Data') as string)
+    const searchParams = req.nextUrl.searchParams
+    const query = searchParams.get('teamName') as string
+    if (!query || typeof query !== "string") {
+        throw new AppError("Invalid Query", 400, true)
+    }
     try {
-        const teams = await prisma.team.findMany({ include: { matchesAsTeam1: true, players: true, MatchRequestReceiver: true } });
-
-        if (!teams || teams.length == 0) {
-            throw new AppError("No Teams Available", 404, false);
+        if (query.length === 0) {
+            return sendResponse("success", [])
         }
-
+        const teams = await prisma.team.findMany({
+            where: {
+                AND: [
+                    { name: { contains: query, mode: "insensitive" } },
+                    { captainId: userData.id },
+                ]
+            }
+        })
         return sendResponse("success", teams);
     } catch (error) {
         return errorHandler(error);

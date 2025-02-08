@@ -1,5 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
+export interface TeamResponse  {
+    name: string;
+    captainId: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
 export const teamsApi = createApi({
     reducerPath: "teamsApi",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/teams" }),
@@ -46,8 +52,12 @@ export const teamsApi = createApi({
                 arg,
             ) => response.status,
         }),
-        
+        getTeams: builder.query<any, string>({
+            query: (teamName) => ({
+                url: `?teamName=${teamName}`,                
+            })
+        })
     })
 })
 
-export const { useCreateTeamMutation, useDeleteTeamMutation, useUpdateTeamMutation } = teamsApi
+export const { useCreateTeamMutation, useDeleteTeamMutation, useUpdateTeamMutation, useGetTeamsQuery } = teamsApi
