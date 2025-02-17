@@ -17,6 +17,9 @@ export const usersApi = createApi({
         getUsers: builder.query<any, string>({
             query: (query) => ({ url: `?username=${query}` })
         }),
+        getMatches: builder.query({
+            query: () => ({ url: `/matches` })
+        }),
         updateUsers: builder.mutation({
             query: ({ id, ...body }) => ({
                 url: `/${id}`,
@@ -34,4 +37,4 @@ export const usersApi = createApi({
     })
 })
 
-export const { useGetUsersQuery, useUpdateUsersMutation, useFindTeamsQuery } = usersApi
+export const { useGetUsersQuery, useUpdateUsersMutation,useGetMatchesQuery, useFindTeamsQuery } = usersApi

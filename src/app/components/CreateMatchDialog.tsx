@@ -60,9 +60,9 @@ const CreateMatchDialog = () => {
     const [fetchingTeam, setFetchingTeam] = useState<boolean>(false)
     function onSubmit(data: z.infer<typeof FormSchema>) {
         const body = {
-            date:data.time.toISOString(),
-            team1Id:data.team.id,
-            location:data.location
+            date: data.time.toISOString(),
+            team1Id: data.team.id,
+            location: data.location
         }
 
         try {

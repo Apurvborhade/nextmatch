@@ -2,6 +2,7 @@ import prisma from "@/app/lib/prisma";
 import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
+import { headers } from "next/headers";
 
 /**
  * @method POST
@@ -118,6 +119,7 @@ export async function POST(req: Request) {
 export async function GET() {
     try {
         const matches = await prisma.match.findMany();
+        
         return sendResponse("success", matches);
     } catch (error) {
         return errorHandler(error);
