@@ -1,11 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Match, useGetCompletedMatchesQuery } from '@/features/users/usersApi'
+import { useEffect, useState } from 'react'
 
 export default function RecentMatches() {
-  const matches = [
-    { id: 1, teams: "Red Dragons vs Blue Tigers", result: "Win" },
-    { id: 2, teams: "Green Falcons vs Yellow Lions", result: "loss" },
-  ]
-
+  const [matches, setMatches] = useState<Match[]>([])
+  const { data, isLoading, error } = useGetCompletedMatchesQuery(null)
+  useEffect(() => {
+    if (data) {
+      setMatches(data.data)
+    }
+  }, [data])
   return (
     <Card>
       <CardHeader>
@@ -13,12 +17,13 @@ export default function RecentMatches() {
       </CardHeader>
       <CardContent>
         <ul className="space-y-4">
-          {matches.map((match) => (
+          {matches && matches.length != 0 ? matches.map((match) => (
             <li key={match.id} className="flex justify-between items-start">
-              <span className="text-sm">{match.teams}</span>
-              <span className={`text-xs text-muted-foreground ${match.result === 'Win' ? 'text-green-700' : 'text-red-700'} font-medium text-3xl`}>{match.result} (3-4)</span>
+              <span className="text-sm">{match.team1.name} vs {match?.team2?.name}</span>
             </li>
-          ))}
+          )) : (
+            <p>There are no recent matches</p>
+          )}
         </ul>
       </CardContent>
     </Card>

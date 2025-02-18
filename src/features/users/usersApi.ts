@@ -10,6 +10,19 @@ interface TeamResponse {
     status: string,
     data: Team[]
 }
+
+export interface Match {
+    id:string,
+    date:string,
+    location:string,
+    status:'active'| 'completed',
+    team1:Team,
+    team2: null | Team
+}
+interface MatchResponse {
+    status: string,
+    data: Match[]
+}
 export const usersApi = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/user" }),
@@ -17,8 +30,11 @@ export const usersApi = createApi({
         getUsers: builder.query<any, string>({
             query: (query) => ({ url: `?username=${query}` })
         }),
-        getMatches: builder.query({
+        getMatches: builder.query<MatchResponse,null>({
             query: () => ({ url: `/matches` })
+        }),
+        getCompletedMatches: builder.query<MatchResponse,null>({
+            query: () => ({ url: `/completed-matches` })
         }),
         updateUsers: builder.mutation({
             query: ({ id, ...body }) => ({
@@ -37,4 +53,4 @@ export const usersApi = createApi({
     })
 })
 
-export const { useGetUsersQuery, useUpdateUsersMutation,useGetMatchesQuery, useFindTeamsQuery } = usersApi
+export const { useGetUsersQuery, useUpdateUsersMutation,useGetMatchesQuery, useFindTeamsQuery,useGetCompletedMatchesQuery } = usersApi
