@@ -19,7 +19,7 @@ import { ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { CalendarIcon, Cross, X } from 'lucide-react'
+import { CalendarIcon, Cross, Plus, X } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
@@ -143,7 +143,7 @@ const CreateMatchDialog = () => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className='w-full'>Create a match</Button>
+                <Button className='w-full'>New Match <Plus /></Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

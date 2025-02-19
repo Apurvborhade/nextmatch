@@ -118,7 +118,15 @@ export async function POST(req: Request) {
  */
 export async function GET() {
     try {
-        const matches = await prisma.match.findMany();
+        const matches = await prisma.match.findMany({
+            orderBy:{
+                date:"asc"
+            },
+            include:{
+                team1:true,
+                team2:true
+            }
+        });
         
         return sendResponse("success", matches);
     } catch (error) {
