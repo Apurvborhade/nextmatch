@@ -12,11 +12,11 @@ interface TeamResponse {
 }
 
 export interface Match {
-    id:string,
-    date:string,
-    location:string,
-    status:'active'| 'completed',
-    team1:Team,
+    id: string,
+    date: string,
+    location: string,
+    status: 'active' | 'completed',
+    team1: Team,
     team2: null | Team
 }
 interface MatchResponse {
@@ -26,14 +26,19 @@ interface MatchResponse {
 export const usersApi = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/user" }),
+    tagTypes:['User'],
     endpoints: (builder) => ({
         getUsers: builder.query<any, string>({
             query: (query) => ({ url: `?username=${query}` })
         }),
-        getMatches: builder.query<MatchResponse,null>({
+        getUserData: builder.query<any, any>({
+            query: (id) => ({ url: `/${id}` }),
+            providesTags:['User']
+        }),
+        getMatches: builder.query<MatchResponse, null>({
             query: () => ({ url: `/matches` })
         }),
-        getCompletedMatches: builder.query<MatchResponse,null>({
+        getCompletedMatches: builder.query<MatchResponse, null>({
             query: () => ({ url: `/completed-matches` })
         }),
         updateUsers: builder.mutation({
@@ -41,7 +46,8 @@ export const usersApi = createApi({
                 url: `/${id}`,
                 method: 'PUT',
                 body: body
-            })
+            }),
+            invalidatesTags:['User']
         }),
 
         findTeams: builder.query<TeamResponse, any>({
@@ -53,4 +59,4 @@ export const usersApi = createApi({
     })
 })
 
-export const { useGetUsersQuery, useUpdateUsersMutation,useGetMatchesQuery, useFindTeamsQuery,useGetCompletedMatchesQuery } = usersApi
+export const { useGetUsersQuery, useUpdateUsersMutation, useGetMatchesQuery, useFindTeamsQuery, useGetCompletedMatchesQuery, useGetUserDataQuery } = usersApi
