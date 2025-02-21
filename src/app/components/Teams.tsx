@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 
 const Teams = () => {
     const { user } = useSelector((state: RootState) => state.user)
-    const { data, isLoading } = useFindTeamsQuery(user?.id)
+    const { data, isLoading } = useFindTeamsQuery(user?.id as string)
 
     return (
         <Card>

@@ -68,6 +68,7 @@ const CreateMatchDialog = () => {
             setShowInputTeam(true)
             setTeamNameInput("")
         } catch (error) {
+            console.log(error)
             toast.error(`There was error in creating new match`);
         }
 
@@ -111,7 +112,7 @@ const CreateMatchDialog = () => {
         promise
             .then((res) => {
                 if (isMounted) {
-                    setTeams(res?.data.data || []);
+                    setTeams(res?.data?.data || []);
                 }
             })
             .catch((err) => {

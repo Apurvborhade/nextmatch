@@ -17,7 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 const notifications = [
   {
     title: "Your call has been confirmed.",

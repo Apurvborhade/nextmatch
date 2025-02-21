@@ -13,10 +13,30 @@ export async function processNotificationQueue() {
     await consumeMessages<{
         title: string;
         description: string;
-        sender: any;
-        user: any;
+        sender: {
+            id: string;
+            name: string;
+            captain: {
+                id: string;
+                name: string;
+                email: string;
+            };
+        };
+        user: {
+            id: string;
+            name: string;
+            captain: {
+                id: string;
+                name: string;
+                email: string;
+            };
+        };
         status: string;
-        matchDetails: any;
+        matchDetails: {
+            id: string;
+            date: Date;
+            location: string;
+        };
         matchRequestId: string;
     }>(RABBITMQ_CONFIG.queues.notificationQueue, async (message) => {
         console.log('Processing notification...');

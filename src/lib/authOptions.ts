@@ -13,7 +13,18 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" },
             },
             // @ts-ignore
-            async authorize(credentials):Promise<any>{
+            async authorize(credentials): Promise<{
+                id: string;
+                name: string;
+                email: string;
+                password: string;
+                role: 'USER' | 'ADMIN' | null;
+                createdAt: Date;
+                updatedAt: Date;
+                age: number | null;
+                bio: string | null;
+                position: string | null;
+            }> {
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error("Email and password are required");
                 }
@@ -33,7 +44,7 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid password");
                 }
 
-                
+
                 return user;
             },
         }),

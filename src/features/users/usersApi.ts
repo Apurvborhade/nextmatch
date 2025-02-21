@@ -35,11 +35,7 @@ interface User {
     role: string
 }
 
-interface UpdateUserBody {
-    username?: string,
-    email?: string,
-    role?: string
-}
+
 
 export const usersApi = createApi({
     reducerPath: "usersApi",

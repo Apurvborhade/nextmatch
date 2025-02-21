@@ -38,7 +38,7 @@ export default function CreateMatch() {
     const defaultPlayersValue: Player[] = []
     const { user } = useSelector((state: RootState) => state.user)
     const [captainId,setCaptainId] = React.useState<string | undefined>("")
-    const [createTeam, { data, isLoading, error, isError }] = useCreateTeamMutation()
+    const [createTeam, { data, isLoading, error }] = useCreateTeamMutation()
 
     
 
