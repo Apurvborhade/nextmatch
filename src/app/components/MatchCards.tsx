@@ -17,6 +17,8 @@ import { useSelector } from 'react-redux'
 import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
 import CreateMatchDialog from './CreateMatchDialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import MatchRequestDialog from './MatchRequestDialog'
 const chartData = [
   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
 ]
@@ -73,7 +75,7 @@ export function MatchCards({ matches, isLoading }: { matches: Match[], isLoading
         </div>
 
       </div>
-      
+
       {filteredMatches && !isLoading && filteredMatches.length === 0 && (
         <div className="w-full min-h-[70vh] flex justify-center items-center">
           <h2 className="text-2xl">No matches found :( </h2>
@@ -82,7 +84,7 @@ export function MatchCards({ matches, isLoading }: { matches: Match[], isLoading
       <div className="grid gap-4 md:grid-cols-3 ">
         {isLoading && (
           <>
-            
+
             <Card className=''>
               <CardHeader className='flex flex-row justify-between'>
                 <div className='w-full'>
@@ -162,7 +164,7 @@ export function MatchCards({ matches, isLoading }: { matches: Match[], isLoading
             <CardHeader className='flex flex-row justify-between'>
               <div>
                 <CardTitle>{match?.team1?.name}</CardTitle>
-                <CardDescription>{format(match?.date,'MMM do, h:mm:a')}</CardDescription>
+                <CardDescription>{format(match?.date, 'MMM do, h:mm:a')}</CardDescription>
               </div>
             </CardHeader>
             <CardContent className='flex flex-row justify-between'>
@@ -173,9 +175,21 @@ export function MatchCards({ matches, isLoading }: { matches: Match[], isLoading
             </CardContent>
             <CardFooter>
               <Button className='mr-2 rounded-full bg-white text-black border border-black shadow-none hover:bg-black hover:text-white'>View</Button>
-              <Button className='rounded-full'>
-                Send Match Request
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  {!match.team2 ? (
+                    <Button className='rounded-full'>
+                        Send Match Request
+                    </Button>
+                  ):(
+                    <Button className='rounded-full' disabled>
+                      <p className="text-sm">Match confirmed</p>
+                    </Button>
+                  )}
+                </DialogTrigger>
+                <MatchRequestDialog  receiverId={match.team1.id} matchId={match.id}/>
+              </Dialog>
+
             </CardFooter>
           </Card>
         ))}
