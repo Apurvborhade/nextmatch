@@ -1,7 +1,7 @@
 "use client"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Clock, Locate, MapPin, Plus, TrendingUp } from 'lucide-react'
+import { Clock, MapPin } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { Match } from '@/features/users/usersApi'
 import { useEffect, useState } from 'react'
 import { RootState } from '../store'
@@ -17,20 +16,8 @@ import { useSelector } from 'react-redux'
 import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
 import CreateMatchDialog from './CreateMatchDialog'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import MatchRequestDialog from './MatchRequestDialog'
-const chartData = [
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-]
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  safari: {
-    label: "Safari",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
 
 export function MatchCards({ matches, isLoading }: { matches: Match[], isLoading: boolean }) {
 

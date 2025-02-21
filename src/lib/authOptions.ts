@@ -12,7 +12,8 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials,req):Promise<any>{
+            // @ts-ignore
+            async authorize(credentials):Promise<any>{
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error("Email and password are required");
                 }

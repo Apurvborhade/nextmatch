@@ -3,7 +3,7 @@ import { FormControl, FormItem, FormLabel, FormMessage } from '@/components/ui/f
 import { Input } from '@/components/ui/input'
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { LoaderCircle, Search, Trash2 } from 'lucide-react'
+import { Search, Trash2 } from 'lucide-react'
 import React from 'react'
 import { UseFieldArrayAppend, UseFormReturn } from 'react-hook-form'
 import { useDebounce } from '../hooks/useDebounce'
@@ -18,7 +18,7 @@ const SearchAddField = ({ form, append }: {
     form: UseFormReturn<{
         name: string;
         players: Player[];
-    }, any, undefined>,
+    }, unknown, undefined>,
     append: UseFieldArrayAppend<any, any>,
     isCaptain: boolean
 }) => {
@@ -46,7 +46,7 @@ const SearchAddField = ({ form, append }: {
         } else {
             setUsers([])
         }
-    }, [query])
+    }, [query,dispatch])
     return (
         <FormItem className="w-full">
             <FormLabel>Players</FormLabel>
@@ -70,7 +70,7 @@ const SearchAddField = ({ form, append }: {
                     )}
                     <ul>
                         {users.map((player) => (
-                            <Button className="w-full flex justify-start" variant={"ghost"} key={player.name} onClick={(e) => {
+                            <Button className="w-full flex justify-start" variant={"ghost"} key={player.name} onClick={() => {
                                 append(player);
                                 setInput("")
 

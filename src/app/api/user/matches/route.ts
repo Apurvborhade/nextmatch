@@ -3,7 +3,7 @@ import sendResponse from "@/app/lib/responseWrapper"
 import { errorHandler } from "@/app/middleware/errorHandler"
 import { headers } from "next/headers"
 
-export async function GET(req: Request) {
+export async function GET() {
     const headersList = await headers()
     const userData = JSON.parse(await headersList.get('X-User-Data') as string)
     try {

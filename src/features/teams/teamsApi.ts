@@ -20,12 +20,8 @@ export const teamsApi = createApi({
                     captainId: body.captainId
                 }
             }),
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
-            transformErrorResponse: (
-                response,
-                meta,
-                arg,
-            ) => response.data,
+            transformResponse: (response: { data: TeamResponse }) => response.data,
+            transformErrorResponse: (response) => response.data,
         }),
         updateTeam: builder.mutation({
             query: ({ id, ...put }) => ({
@@ -33,26 +29,18 @@ export const teamsApi = createApi({
                 method: 'PUT',
                 body: put
             }),
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
-            transformErrorResponse: (
-                response: { status: string | number },
-                meta,
-                arg,
-            ) => response.status,
+            transformResponse: (response: { data: TeamResponse }) => response.data,
+            transformErrorResponse: (response: { status: string | number }) => response.status,
         }),
         deleteTeam: builder.mutation({
             query: ({ id }) => ({
                 url: `/${id}`,
                 method: 'DELETE',
             }),
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
-            transformErrorResponse: (
-                response: { status: string | number },
-                meta,
-                arg,
-            ) => response.status,
+            transformResponse: (response: { data: TeamResponse }) => response.data,
+            transformErrorResponse: (response: { status: string | number }) => response.status,
         }),
-        getTeams: builder.query<any, string>({
+        getTeams: builder.query<TeamResponse[], string>({
             query: (teamName) => ({
                 url: `?teamName=${teamName}`,                
             })

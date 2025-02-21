@@ -9,13 +9,13 @@ import { Loader } from './Loader'
 import { Textarea } from '@/components/ui/textarea'
 import { useSendMatchRequestMutation } from '@/features/matches/matchesApi'
 import { toast } from 'sonner'
-import { Form } from '@/components/ui/form'
+
 
 const MatchRequestDialog = ({ receiverId, matchId }: { receiverId: string, matchId: string }) => {
     const user = useSelector((state: RootState) => state.user.user)
     const [teamId, setTeamId] = useState<string>('')
     const [message, setMessage] = useState<string>('')
-    const { data, isLoading, error } = useFindTeamsQuery(user?.id)
+    const { data, isLoading } = useFindTeamsQuery(user?.id)
     const [sendMatchRequest, { isLoading: RequestSending, error: RequestError, isSuccess }] = useSendMatchRequestMutation();
     const valueChange = (value: string) => {
         setTeamId(value)

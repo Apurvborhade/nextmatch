@@ -10,10 +10,18 @@ const templateId = {
     requestDeclined: "d-d685b6ac2b844230979d8d5c2fea466f"
 }
 export async function processNotificationQueue() {
-    await consumeMessages(RABBITMQ_CONFIG.queues.notificationQueue, async (message) => {
+    await consumeMessages<{
+        title: string;
+        description: string;
+        sender: any;
+        user: any;
+        status: string;
+        matchDetails: any;
+        matchRequestId: string;
+    }>(RABBITMQ_CONFIG.queues.notificationQueue, async (message) => {
         console.log('Processing notification...');
         // Add your notification logic here (e.g., send email or push notification)
-        const { title, description, sender, user, status, matchDetails, matchRequestId } = await message;
+        const { title, description, sender, user, status, matchDetails, matchRequestId } = message;
 
         const notification = await prisma.notification.create({
             data: {

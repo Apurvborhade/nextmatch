@@ -2,26 +2,16 @@ import React from 'react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { useFindTeamsQuery, usersApi } from '@/features/users/usersApi'
+import { useFindTeamsQuery } from '@/features/users/usersApi'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store'
-import { LoadComponentsReturnType } from 'next/dist/server/load-components'
-import { teamsApi } from '@/features/teams/teamsApi'
-import { Loader } from './Loader'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 const Teams = () => {
-    const teams = [
-        { id: 1, name: "Red Dragons ", playersQty: 12 },
-        { id: 2, name: "Green Falcons", playersQty: 12 },
-    ]
     const { user } = useSelector((state: RootState) => state.user)
-    const { data, isLoading, error } = useFindTeamsQuery(user?.id)
+    const { data, isLoading } = useFindTeamsQuery(user?.id)
 
-    React.useEffect(() => {
-        console.log(data)
-    }, [data])
     return (
         <Card>
             <CardHeader>

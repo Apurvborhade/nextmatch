@@ -27,7 +27,7 @@ export function ProfileEditForm() {
     const [defending, setDefending] = useState(5)
     const [speed, setSpeed] = useState(5)
     
-    const [updateProfile, { isLoading, error }] = useUpdateUsersMutation()
+    const [updateProfile, { isLoading }] = useUpdateUsersMutation()
     const user = useSelector((state:RootState) => state.user.user)
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

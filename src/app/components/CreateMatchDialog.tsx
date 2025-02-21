@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import {
     Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
+    DialogContent, DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
+    DialogTrigger
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -19,7 +16,7 @@ import { ScrollBar } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { Popover, PopoverTrigger, PopoverContent } from '@radix-ui/react-popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { CalendarIcon, Cross, Plus, X } from 'lucide-react'
+import { CalendarIcon, Plus, X } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
@@ -28,7 +25,6 @@ import { useDispatch } from 'react-redux'
 import { TeamResponse, teamsApi } from '@/features/teams/teamsApi'
 import { AppDispatch } from '../store'
 import { Loader } from './Loader'
-import { DialogClose } from '@radix-ui/react-dialog'
 import { useCreateMatchMutation } from '@/features/matches/matchesApi'
 const teamObject = z.object({
     id: z.string().optional(),
@@ -50,7 +46,7 @@ const CreateMatchDialog = () => {
         }
     })
 
-    const [createMatch, { isLoading, isSuccess, error }] = useCreateMatchMutation()
+    const [createMatch] = useCreateMatchMutation()
     const { setValue, watch, reset } = form
     const [showInputTeam, setShowInputTeam] = React.useState(true);
     const [teamNameInput, setTeamNameInput] = React.useState<string>("")
@@ -87,7 +83,7 @@ const CreateMatchDialog = () => {
     function handleTimeChange(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, type: "hour" | "minute", value: string) {
         e.preventDefault()
         const currentDate = form.getValues("time") || new Date();
-        let newDate = new Date(currentDate);
+        const newDate = new Date(currentDate);
 
         if (type === "hour") {
             const hour = parseInt(value, 10);

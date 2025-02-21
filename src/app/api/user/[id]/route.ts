@@ -6,8 +6,6 @@ import prisma from "@/app/lib/prisma";
 import sendResponse from "@/app/lib/responseWrapper";
 import { headers } from "next/headers";
 
-const secret = process.env.NEXTAUTH_SECRET;
-
 
 
 interface Skill {

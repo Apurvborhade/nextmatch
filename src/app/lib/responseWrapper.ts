@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-const NextResponseType = typeof NextResponse
+
 interface apiResponse<T> {
     status: "success" | "error";
     data?: T;

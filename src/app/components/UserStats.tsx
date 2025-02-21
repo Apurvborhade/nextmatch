@@ -26,7 +26,7 @@ const chartConfig = {
 export function UserStats() {
   const user = useSelector((state: RootState) => state.user.user);
   const [chartData,setChartData] = useState<chartDataSkel[]>()
-  const { data, isLoading, error } = useGetUserDataQuery(user?.id)
+  const { data } = useGetUserDataQuery(user?.id)
 
 
   useEffect(() => {

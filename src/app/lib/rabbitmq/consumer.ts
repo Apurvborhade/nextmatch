@@ -1,7 +1,7 @@
 import { Channel, ConsumeMessage } from "amqplib";
 import { getRabbitMqConnection } from "./connection";
 
-export async function consumeMessages(queue: string, callback: (msg: any) => void) {
+export async function consumeMessages<T>(queue: string, callback: (msg: T) => Promise<unknown>) {
     const connection = await getRabbitMqConnection()
     const channel: Channel = await connection?.createChannel() as Channel;
 

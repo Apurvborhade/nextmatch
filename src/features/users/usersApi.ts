@@ -4,7 +4,11 @@ interface Team {
     name: string,
     captainId: string,
     createdAt: string,
-    players: Array<any>
+    players: Array<{
+        id: string,
+        name: string,
+        role: string
+    }>
 }
 interface TeamResponse {
     status: string,
@@ -23,15 +27,29 @@ interface MatchResponse {
     status: string,
     data: Match[]
 }
+
+interface User {
+    id: string,
+    username: string,
+    email: string,
+    role: string
+}
+
+interface UpdateUserBody {
+    username?: string,
+    email?: string,
+    role?: string
+}
+
 export const usersApi = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/user" }),
     tagTypes:['User'],
     endpoints: (builder) => ({
-        getUsers: builder.query<any, string>({
+        getUsers: builder.query<User[], string>({
             query: (query) => ({ url: `?username=${query}` })
         }),
-        getUserData: builder.query<any, any>({
+        getUserData: builder.query<User, string>({
             query: (id) => ({ url: `/${id}` }),
             providesTags:['User']
         }),
@@ -50,7 +68,7 @@ export const usersApi = createApi({
             invalidatesTags:['User']
         }),
 
-        findTeams: builder.query<TeamResponse, any>({
+        findTeams: builder.query<TeamResponse, string>({
             query: (id) => ({
                 url: `/${id}/getteams`
             })

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import sendResponse from "../lib/responseWrapper";
 import { AppError } from "@/utils/CustomError";
-import { errorHandler } from "./errorHandler";
+
 
 const rateLimitMap = new Map<string, { count: number, lastReset: number }>()
 export default function rateLimitMiddleware(req: NextRequest) {

@@ -4,6 +4,7 @@ import { getToken } from 'next-auth/jwt'
 import { apiMiddleware } from './app/middleware/api.middleware'
 import { errorHandler } from './app/middleware/errorHandler'
 import rateLimitMiddleware from './app/middleware/rateLimiter'
+import { AppError } from './utils/CustomError'
 export { default } from "next-auth/middleware"
 
 const secret = process.env.AUTH_SECRET
@@ -39,7 +40,7 @@ export async function middleware(request: NextRequest) {
 
         
         return NextResponse.next();
-    } catch (error: any) {
+    } catch (error: Error | AppError | SyntaxError | unknown ) {
         return errorHandler(error)
     }
 }

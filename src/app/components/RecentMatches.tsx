@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 export default function RecentMatches() {
   const [matches, setMatches] = useState<Match[]>([])
-  const { data, isLoading, error } = useGetCompletedMatchesQuery(null)
+  const { data } = useGetCompletedMatchesQuery(null)
   useEffect(() => {
     if (data) {
       setMatches(data.data)

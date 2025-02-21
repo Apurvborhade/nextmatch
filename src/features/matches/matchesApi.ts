@@ -1,7 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
-import { AnyNaptrRecord } from 'dns'
 
+interface Match {
+    id: string;
+    // Add other match properties here
+}
+
+interface MatchResponse {
+    data: Match;
+}
 
 export const matchesApi = createApi({
     reducerPath: "matchesApi",
@@ -19,11 +26,9 @@ export const matchesApi = createApi({
                 body: body
             }),
             invalidatesTags: ['Match'],
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
+            transformResponse: (response: MatchResponse) => response.data,
             transformErrorResponse: (
-                response: { status: string | number },
-                meta,
-                arg,
+                response: { status: string | number }
             ) => response.status,
         }),
         deleteMatch: builder.mutation({
@@ -31,25 +36,21 @@ export const matchesApi = createApi({
                 url: `/${id}`,
                 method: 'DELETE',
             }),
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
+            transformResponse: (response: MatchResponse) => response.data,
             transformErrorResponse: (
-                response: { status: string | number },
-                meta,
-                arg,
+                response: { status: string | number }
             ) => response.status,
         }),
-        sendMatchRequest: builder.mutation<any, { senderId: string, receiverId: string, message: string, matchId: string }>({
+        sendMatchRequest: builder.mutation<Match, { senderId: string, receiverId: string, message: string, matchId: string }>({
             query: ({ ...body }) => ({
                 url: `/match-request`,
                 method: 'POST',
                 body: body
             }),
             invalidatesTags: ['Match'],
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
+            transformResponse: (response: MatchResponse) => response.data,
             transformErrorResponse: (
-                response: FetchBaseQueryError,
-                meta,
-                arg,
+                response: FetchBaseQueryError
             ) => {
                 if ('data' in response && response.data && typeof response.data === 'object' && 'message' in response.data) {
                     return { message: (response.data as { message: string }).message };
@@ -61,6 +62,5 @@ export const matchesApi = createApi({
         })
     })
 })
-
 
 export const { useCreateMatchMutation, useDeleteMatchMutation, useGetAllMatchesQuery, useSendMatchRequestMutation } = matchesApi

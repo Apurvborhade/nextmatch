@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 export function TodayMatches() {
   const [matches, setMatches] = useState<Match[]>([]);
-  const { data, isLoading, error } = useGetMatchesQuery(null);
+  const { data, isLoading } = useGetMatchesQuery(null);
 
   const formatDate = (dateString: string) => {
     // format
