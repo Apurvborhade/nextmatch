@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            // @ts-ignore
+            // @ts-expect-error
             async authorize(credentials): Promise<{
                 id: string;
                 name: string;

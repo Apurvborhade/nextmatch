@@ -5,6 +5,7 @@ import { apiMiddleware } from './app/middleware/api.middleware'
 import { errorHandler } from './app/middleware/errorHandler'
 import rateLimitMiddleware from './app/middleware/rateLimiter'
 import { AppError } from './utils/CustomError'
+
 export { default } from "next-auth/middleware"
 
 const secret = process.env.AUTH_SECRET
