@@ -12,7 +12,8 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            // @ts-expect-error
+            
+            // @ts-expect-error - CredentialsProvider type definition is incomplete
             async authorize(credentials): Promise<{
                 id: string;
                 name: string;
