@@ -32,7 +32,7 @@ export function UserStats() {
   useEffect(() => {
     if (data) {
       const skipkeys= new Set(['id','userId'])
-      const graphData = Object.entries(data.data.skills)
+      const graphData = Object.entries(data?.data?.skills ? data?.data?.skills : {})
       .filter(([key])=> !skipkeys.has(key))
       .map(([key,value]) => ({
         skill:key,
