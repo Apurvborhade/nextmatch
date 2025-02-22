@@ -40,10 +40,11 @@ export const teamsApi = createApi({
             transformResponse: (response: { data: TeamResponse }) => response.data,
             transformErrorResponse: (response: { status: string | number }) => response.status,
         }),
-        getTeams: builder.query<TeamResponse[], string>({
+        getTeams: builder.query<{ data: TeamResponse[] }, string>({
             query: (teamName) => ({
                 url: `?teamName=${teamName}`,                
-            })
+            }),
+            transformResponse: (response: { data: TeamResponse[] }) => response
         })
     })
 })
