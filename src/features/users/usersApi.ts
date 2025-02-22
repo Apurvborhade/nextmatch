@@ -29,10 +29,18 @@ interface MatchResponse {
 }
 
 interface User {
-    id: string,
-    username: string,
-    email: string,
-    role: string
+    status: string,
+    data: {
+        id: string,
+        username: string,
+        email: string,
+        role: string,
+        skills: {
+            id: string,
+            userId: string,
+            [key: string]: string | number
+        }
+    }
 }
 
 

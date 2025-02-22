@@ -15,7 +15,7 @@ const MatchRequestDialog = ({ receiverId, matchId }: { receiverId: string, match
     const user = useSelector((state: RootState) => state.user.user)
     const [teamId, setTeamId] = useState<string>('')
     const [message, setMessage] = useState<string>('')
-    const { data, isLoading } = useFindTeamsQuery(user?.id)
+    const { data, isLoading } = useFindTeamsQuery(user?.id as string)
     const [sendMatchRequest, { isLoading: RequestSending, error: RequestError, isSuccess }] = useSendMatchRequestMutation();
     const valueChange = (value: string) => {
         setTeamId(value)

@@ -38,10 +38,10 @@ const SearchAddField = ({ form, append }: {
             setFetchingPlayer(true)
             dispatch(usersApi.endpoints.getUsers.initiate(query)) // Unwraps the promise to handle the result or error
                 .then((response) => {
-                    if('data' in response) {
-                        if('data' in response.data) {
+                    if (response && 'data' in response && response.data) {
+                        if ('data' in response.data && Array.isArray(response.data.data)) {
                             setFetchingPlayer(false)
-                            setUsers(response.data.data)
+                            setUsers(response.data.data as { id: number, name: string }[])
                         }
                     }
                 })
