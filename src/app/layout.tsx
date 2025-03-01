@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -6,6 +7,7 @@ import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";
 import UserInitializer from "@/app/components/UserInitializer";
 import { Toaster } from "@/components/ui/sonner";
+import { ServiceInitializer } from "@/ServiceInitializer";
 
 
 const geistSans = localFont({
@@ -37,6 +39,7 @@ export default async function RootLayout({
     token,
     secret: process.env.NEXTAUTH_SECRET as string
   })
+  
   return (
     <html lang="en">
       <body
@@ -44,7 +47,7 @@ export default async function RootLayout({
       >
 
         <Provider>
-          {/* <ServiceInitializer /> */}
+          <ServiceInitializer />
           <UserInitializer user={user} />
           <Toaster />
           {children}

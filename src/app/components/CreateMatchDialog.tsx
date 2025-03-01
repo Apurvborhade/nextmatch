@@ -26,6 +26,7 @@ import { TeamResponse, teamsApi } from '@/features/teams/teamsApi'
 import { AppDispatch } from '../store'
 import { Loader } from './Loader'
 import { useCreateMatchMutation } from '@/features/matches/matchesApi'
+import { usersApi } from '@/features/users/usersApi'
 const teamObject = z.object({
     id: z.string().optional(),
     name: z.string().optional(),
@@ -63,7 +64,9 @@ const CreateMatchDialog = () => {
 
         try {
             createMatch(body)
+            dispatch(usersApi.util.invalidateTags(['User']))
             toast.success(`Match created successfully`);
+
             reset();
             setShowInputTeam(true)
             setTeamNameInput("")

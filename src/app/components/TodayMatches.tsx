@@ -41,6 +41,11 @@ export function TodayMatches() {
                 <span className="text-xs text-muted-foreground">{match.date && formatDate(match.date)}</span>
               </li>
             ))}
+            {matches?.length === 0 && !isLoading && (
+              <p className='text-muted-foreground'>
+                There's no match today
+              </p>
+            )}
           </ul>
         </CardContent>
       </div>

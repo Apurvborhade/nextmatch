@@ -63,7 +63,6 @@ export async function processNotificationQueue() {
                 decline_link: `http://localhost:3000/matches/reject?requestId=${matchRequestId}`,
             });
         } else if (status === MatchRequestNotificationType.ACCEPTED) {
-
             await sendMaillWithTemplate(user?.captain?.email, templateId.requestAccept, {
                 recipient_name: user.captain?.name ? user.captain?.name : '',
                 sender_name: sender?.captain?.name,

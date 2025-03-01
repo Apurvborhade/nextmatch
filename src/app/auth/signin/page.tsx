@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,8 +19,9 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchparams = useSearchParams()
   const { status } = useSession()
-
+  const callbackUrl = searchparams.get('callbackUrl')
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -37,7 +38,7 @@ export default function SignIn() {
       setError("Invalid credentials");
     } else {
       console.log("push")
-      router.push("/")
+      router.push(callbackUrl || '/dashboard')
     }
   };
 

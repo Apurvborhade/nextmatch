@@ -32,7 +32,9 @@ const Teams = () => {
                                 <span>{team.players.length} players</span>
                             </li>
                         ))}
-
+                        {data?.data?.length === 0 && (
+                            <p className="text-muted-foreground">You haven't joined any teams yet.</p>
+                        )}
                     </ul>
                 </ScrollArea>
             </CardContent>

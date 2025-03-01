@@ -58,7 +58,8 @@ export const usersApi = createApi({
             providesTags:['User']
         }),
         getMatches: builder.query<MatchResponse, null>({
-            query: () => ({ url: `/matches` })
+            query: () => ({ url: `/matches` }),
+            providesTags:['User']
         }),
         getCompletedMatches: builder.query<MatchResponse, null>({
             query: () => ({ url: `/completed-matches` })

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { usersApi } from '../users/usersApi';
 
 interface Match {
     id: string;
@@ -30,6 +31,7 @@ export const matchesApi = createApi({
             transformErrorResponse: (
                 response: { status: string | number }
             ) => response.status,
+            
         }),
         deleteMatch: builder.mutation({
             query: ({ id }) => ({
@@ -59,8 +61,44 @@ export const matchesApi = createApi({
                 }
                 return { message: 'An unknown error occurred' };
             }
+        }),
+        matchRequestAccept:builder.mutation({
+            query:(requestId) => ({
+                url:`/match-request/accept?requestId=${requestId}`,
+                method:'PATCH'
+            }),
+            invalidatesTags:['Match'],
+            transformResponse: (response: {}) => response,
+            transformErrorResponse: (
+                response: FetchBaseQueryError
+            ) => {
+                if ('data' in response && response.data && typeof response.data === 'object' && 'message' in response.data) {
+                    return { message: (response.data as { message: string }).message };
+                } else if ('message' in response) {
+                    return { message: response.message }; // Handles SerializedError case
+                }
+                return { message: 'An unknown error occurred' };
+            }
+        }),
+        matchRequestDecline:builder.mutation({
+            query:(requestId) => ({
+                url:`/match-request/decline?requestId=${requestId}`,
+                method:'PATCH'
+            }),
+            invalidatesTags:['Match'],
+            transformResponse: (response: {}) => response,
+            transformErrorResponse: (
+                response: FetchBaseQueryError
+            ) => {
+                if ('data' in response && response.data && typeof response.data === 'object' && 'message' in response.data) {
+                    return { message: (response.data as { message: string }).message };
+                } else if ('message' in response) {
+                    return { message: response.message }; // Handles SerializedError case
+                }
+                return { message: 'An unknown error occurred' };
+            }
         })
     })
 })
 
-export const { useCreateMatchMutation, useDeleteMatchMutation, useGetAllMatchesQuery, useSendMatchRequestMutation } = matchesApi
+export const { useCreateMatchMutation, useDeleteMatchMutation, useGetAllMatchesQuery, useSendMatchRequestMutation,useMatchRequestAcceptMutation,useMatchRequestDeclineMutation } = matchesApi
