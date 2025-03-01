@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
-import { usersApi } from '../users/usersApi';
 
 interface Match {
     id: string;
@@ -68,7 +67,6 @@ export const matchesApi = createApi({
                 method:'PATCH'
             }),
             invalidatesTags:['Match'],
-            transformResponse: (response: {}) => response,
             transformErrorResponse: (
                 response: FetchBaseQueryError
             ) => {

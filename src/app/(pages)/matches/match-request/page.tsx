@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 const MatchRequestAccept = () => {
     const searchParams = useSearchParams()
-    const { data: session, status } = useSession()
+    const { status } = useSession()
     const pathname = usePathname(); // Gets the current path without query parameters
      
 
@@ -21,7 +21,7 @@ const MatchRequestAccept = () => {
             console.log(status)
             redirect(`/auth/signin?callbackUrl=${encodeURIComponent(asPath)}`)
         }
-    }, [status])
+    }, [status,asPath])
     const requestId = searchParams.get('requestId')
     const [accept, { isLoading: ACCEPT_LOADING, error: ACCEPT_ERROR, isSuccess: ACCEPT_SUCCESS }] = useMatchRequestAcceptMutation()
     const [decline, { isLoading: DECLINE_LOADING, error: DECLINE_ERROR, isSuccess: DECLINE_SUCCESS }] = useMatchRequestDeclineMutation()
@@ -38,7 +38,7 @@ const MatchRequestAccept = () => {
         } else if (DECLINE_ERROR && 'message' in DECLINE_ERROR) {
             toast.error(DECLINE_ERROR.message)
         }
-    }, [ACCEPT_ERROR, DECLINE_ERROR, ACCEPT_LOADING, DECLINE_LOADING, ACCEPT_ERROR])
+    }, [ACCEPT_ERROR, DECLINE_ERROR, ACCEPT_LOADING, DECLINE_LOADING])
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl border border-gray-200">

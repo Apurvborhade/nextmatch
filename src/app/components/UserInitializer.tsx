@@ -17,7 +17,7 @@ const UserInitializer = ({
         if (!user && pathname !== '/auth/signin' && pathname !== '/auth/signup' && pathname !== '/' && !pathname.startsWith('/matches/match-request')) {
             redirect('/auth/signin')
         }
-    }, [user])
+    }, [user,pathname])
     const { user: alreadyUserExist } = useSelector((state: RootState) => state.user)
 
     const dispatch = useDispatch()
