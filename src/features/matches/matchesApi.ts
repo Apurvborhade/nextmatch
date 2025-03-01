@@ -84,7 +84,7 @@ export const matchesApi = createApi({
                 method:'PATCH'
             }),
             invalidatesTags:['Match'],
-            transformResponse: (response: {}) => response,
+
             transformErrorResponse: (
                 response: FetchBaseQueryError
             ) => {
