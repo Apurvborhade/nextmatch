@@ -1,5 +1,4 @@
 "use client"
-import { useGetUsersQuery } from "@/features/users/usersApi";
 
 import Header from "./components/Landing/Header";
 import Hero from "./components/Landing/Hero";

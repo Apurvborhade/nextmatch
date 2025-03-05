@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, Bell, BellDot, MessageSquare, User, ChevronDown, BellRing, Check } from 'lucide-react'
+import { BellDot, MessageSquare, User, Check } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,11 +14,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import {
   Popover,
-  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 const notifications = [
   {
     title: "Your call has been confirmed.",
@@ -33,7 +32,6 @@ const notifications = [
     description: "2 hours ago",
   },
 ]
-type CardProps = React.ComponentProps<typeof Card>
 export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-10 border-b">

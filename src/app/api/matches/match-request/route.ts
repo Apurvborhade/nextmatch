@@ -38,6 +38,9 @@ export async function POST(req: Request) {
     const { senderId, receiverId, message, matchId } = await req.json();
 
     try {
+        if(senderId == receiverId) {
+            throw new AppError("Sender and Receiver IDs needs to be different", 400, false);
+        }
         // Validate required fields
         if (!senderId || !receiverId) {
             throw new AppError("Sender and Receiver IDs are required", 400, false);
@@ -88,7 +91,7 @@ export async function POST(req: Request) {
         if (existingRequest) {
             throw new AppError("A match request already exists between these teams for this match", 409, false);
         }
-        
+
         // Create match request
         const matchRequest = await prisma.matchRequest.create({
             data: {

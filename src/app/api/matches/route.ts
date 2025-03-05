@@ -3,6 +3,7 @@ import sendResponse from "@/app/lib/responseWrapper";
 import { errorHandler } from "@/app/middleware/errorHandler";
 import { AppError } from "@/utils/CustomError";
 
+
 /**
  * @method POST
  * @route /api/match
@@ -117,7 +118,16 @@ export async function POST(req: Request) {
  */
 export async function GET() {
     try {
-        const matches = await prisma.match.findMany();
+        const matches = await prisma.match.findMany({
+            orderBy:{
+                date:"asc"
+            },
+            include:{
+                team1:true,
+                team2:true
+            }
+        });
+        
         return sendResponse("success", matches);
     } catch (error) {
         return errorHandler(error);

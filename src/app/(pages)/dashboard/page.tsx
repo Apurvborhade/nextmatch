@@ -5,6 +5,8 @@ import { RecentActivity } from '@/app/components/RecentActivity'
 import { TodayMatches } from '@/app/components/TodayMatches'
 import Teams from '@/app/components/Teams'
 import RecentMatches from '@/app/components/RecentMatches'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 
 
@@ -12,7 +14,13 @@ import RecentMatches from '@/app/components/RecentMatches'
 export default function DashboardLayout() {
     return (
         <div className="space-y-8">
+            <div className='flex items-center w-full'>
+
             <h1 className="text-3xl font-bold">Dashboard</h1>
+            <Link href={'/dashboard/edit-profile'} className='ml-auto'>
+                <Button>Edit profile</Button>
+            </Link>
+            </div>
 
             <div className="grid gap-4 md:grid-cols-3 relative">
                 <div className="md:col-span-2">

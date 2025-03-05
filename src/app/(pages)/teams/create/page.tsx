@@ -38,11 +38,9 @@ export default function CreateMatch() {
     const defaultPlayersValue: Player[] = []
     const { user } = useSelector((state: RootState) => state.user)
     const [captainId,setCaptainId] = React.useState<string | undefined>("")
-    const [createTeam, { data, isLoading, error, isError }] = useCreateTeamMutation()
+    const [createTeam, { data, isLoading, error }] = useCreateTeamMutation()
 
-    useEffect(() => {
-        console.log(data, error, isError)
-    }, [error, isError])
+    
 
     useEffect(() => {
         setCaptainId(user?.id as string)
@@ -81,7 +79,7 @@ export default function CreateMatch() {
             })
             form.reset();
         }
-    },[data])
+    },[data,form])
 
     return (
         <div className="w-full flex justify-center items-center">

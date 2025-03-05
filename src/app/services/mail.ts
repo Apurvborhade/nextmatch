@@ -1,8 +1,9 @@
 import sgMail from '@sendgrid/mail'
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY as string
+console.log(SENDGRID_API_KEY)
 sgMail.setApiKey(SENDGRID_API_KEY);
-
+console.log(sgMail)
 export default async function sendMaillWithTemplate(
     toEmail: string,
     templateId: string,
@@ -10,17 +11,17 @@ export default async function sendMaillWithTemplate(
 ) {
 
     console.log("Mailing")
-    const msg = {
-        to: toEmail,// Adding cc recipient
-        from: 'apurvaborhadee@outlook.com',
-        subject: 'Match Request Sent',
-        templateId,
-        dynamicTemplateData: templateData
-    };
-    try {
-        await sgMail.send(msg);
-        console.log("Mail Sent Successfully")
-    } catch (error) {
-        console.log(error)
-    }
+        const msg = {
+            to: toEmail,// Adding cc recipient
+            from: 'apurvaborhadee@outlook.com',
+            subject: 'Match Request Sent',
+            templateId,
+            dynamicTemplateData: templateData
+        };
+        try {
+            await sgMail.send(msg);
+            console.log("Mail Sent Successfully")
+        } catch (error) {
+            console.error("Error:", (error as any).response?.body || error);
+        }
 }

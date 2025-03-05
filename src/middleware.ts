@@ -4,6 +4,7 @@ import { getToken } from 'next-auth/jwt'
 import { apiMiddleware } from './app/middleware/api.middleware'
 import { errorHandler } from './app/middleware/errorHandler'
 import rateLimitMiddleware from './app/middleware/rateLimiter'
+
 export { default } from "next-auth/middleware"
 
 const secret = process.env.AUTH_SECRET
@@ -28,6 +29,11 @@ export async function middleware(request: NextRequest) {
             console.log("not Authenticated")
             return NextResponse.redirect(new URL('/auth/signin', request.url))
         }
+        if (!token && url.pathname !== "/auth/signin" && url.pathname !== "/auth/signup" && url.pathname !== "/") {
+            console.log("not Authenticated")
+            console.log("Redirect")
+            return NextResponse.redirect(new URL('/auth/signin', request.url), { status: 302 })
+        }
 
 
 
@@ -39,12 +45,12 @@ export async function middleware(request: NextRequest) {
 
         
         return NextResponse.next();
-    } catch (error: any) {
+    } catch (error: Error | SyntaxError | unknown ) {
         return errorHandler(error)
     }
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: ['/', '/auth/signin', '/auth/signup', '/api/matches', '/api/teams'],
+    matcher: ['/', '/auth/signin', '/auth/signup', '/api/matches', '/api/teams','/api/user','/api/user/matches','/api/user/completed-matches','/api/user/:path*','/api/matches/match-request/:path*'],
 }

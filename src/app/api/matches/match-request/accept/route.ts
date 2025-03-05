@@ -5,6 +5,7 @@ import { publishMessage } from "@/app/lib/rabbitmq/publisher";
 import sendResponse from "@/app/lib/responseWrapper"
 import { errorHandler } from "@/app/middleware/errorHandler"
 import { AppError } from "@/utils/CustomError";
+import { headers } from "next/headers";
 import { NextRequest } from "next/server"
 
 /**
@@ -29,11 +30,20 @@ import { NextRequest } from "next/server"
  */
 export async function PATCH(req: NextRequest) {
     try {
+        const headersList = await headers()
+        const userData = JSON.parse(await headersList.get('X-User-Data') as string)
 
         const searchparams = req.nextUrl.searchParams
         const requestId = searchparams.get('requestId') as string;
 
         const validMatchRequest = await prisma.matchRequest.findUnique({
+            include: {
+                receiver: {
+                    include: {
+                        captain: true
+                    }
+                }
+            },
             where: {
                 id: requestId
             }
@@ -47,8 +57,11 @@ export async function PATCH(req: NextRequest) {
         }
         if (validMatchRequest.status === 'REJECTED') {
             throw new AppError("Request Already Rejected", 409, false);
-        }
 
+        }
+        if (userData.id != validMatchRequest.receiver.captainId) {
+            throw new AppError("Only Captain can accept match request", 409, false);
+        }
         const matchRequest = await prisma.matchRequest.update({
             where: { id: requestId },
             include: {
@@ -65,12 +78,13 @@ export async function PATCH(req: NextRequest) {
             },
         });
 
+
         // Update the match details
         const match = await prisma.match.update({
             where: { id: matchRequest?.match?.id },
             data: {
-                team1Id: matchRequest.senderId,
-                team2Id: matchRequest.receiverId,
+                team1Id: matchRequest.receiverId,
+                team2Id: matchRequest.senderId,
                 date: new Date(), // Example: Use the current date or a provided one
             },
         });

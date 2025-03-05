@@ -10,10 +10,38 @@ const templateId = {
     requestDeclined: "d-d685b6ac2b844230979d8d5c2fea466f"
 }
 export async function processNotificationQueue() {
-    await consumeMessages(RABBITMQ_CONFIG.queues.notificationQueue, async (message) => {
+    await consumeMessages<{
+        title: string;
+        description: string;
+        sender: {
+            id: string;
+            name: string;
+            captain: {
+                id: string;
+                name: string;
+                email: string;
+            };
+        };
+        user: {
+            id: string;
+            name: string;
+            captain: {
+                id: string;
+                name: string;
+                email: string;
+            };
+        };
+        status: string;
+        matchDetails: {
+            id: string;
+            date: Date;
+            location: string;
+        };
+        matchRequestId: string;
+    }>(RABBITMQ_CONFIG.queues.notificationQueue, async (message) => {
         console.log('Processing notification...');
         // Add your notification logic here (e.g., send email or push notification)
-        const { title, description, sender, user, status, matchDetails, matchRequestId } = await message;
+        const { title, description, sender, user, status, matchDetails, matchRequestId } = message;
 
         const notification = await prisma.notification.create({
             data: {
@@ -35,7 +63,6 @@ export async function processNotificationQueue() {
                 decline_link: `http://localhost:3000/matches/reject?requestId=${matchRequestId}`,
             });
         } else if (status === MatchRequestNotificationType.ACCEPTED) {
-
             await sendMaillWithTemplate(user?.captain?.email, templateId.requestAccept, {
                 recipient_name: user.captain?.name ? user.captain?.name : '',
                 sender_name: sender?.captain?.name,

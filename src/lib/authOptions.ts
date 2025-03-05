@@ -12,7 +12,20 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials,req):Promise<any>{
+            
+            // @ts-expect-error - CredentialsProvider type definition is incomplete
+            async authorize(credentials): Promise<{
+                id: string;
+                name: string;
+                email: string;
+                password: string;
+                role: 'USER' | 'ADMIN' | null;
+                createdAt: Date;
+                updatedAt: Date;
+                age: number | null;
+                bio: string | null;
+                position: string | null;
+            }> {
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error("Email and password are required");
                 }
@@ -32,7 +45,7 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid password");
                 }
 
-                
+
                 return user;
             },
         }),

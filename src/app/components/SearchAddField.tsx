@@ -3,7 +3,7 @@ import { FormControl, FormItem, FormLabel, FormMessage } from '@/components/ui/f
 import { Input } from '@/components/ui/input'
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { LoaderCircle, Search, Trash2 } from 'lucide-react'
+import { Search, Trash2 } from 'lucide-react'
 import React from 'react'
 import { UseFieldArrayAppend, UseFormReturn } from 'react-hook-form'
 import { useDebounce } from '../hooks/useDebounce'
@@ -13,12 +13,14 @@ import { usersApi } from '@/features/users/usersApi'
 import { Player } from '@/app/(pages)/teams/create/page'
 import { Loader } from './Loader'
 
+type FormValues = {
+    name: string;
+    players: Player[];
+}
 
 const SearchAddField = ({ form, append }: {
-    form: UseFormReturn<{
-        name: string;
-        players: Player[];
-    }, any, undefined>,
+    form: UseFormReturn<FormValues, unknown, undefined>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     append: UseFieldArrayAppend<any, any>,
     isCaptain: boolean
 }) => {
@@ -36,9 +38,12 @@ const SearchAddField = ({ form, append }: {
             setFetchingPlayer(true)
             dispatch(usersApi.endpoints.getUsers.initiate(query)) // Unwraps the promise to handle the result or error
                 .then((response) => {
-                    console.log(response.data.data)
-                    setFetchingPlayer(false)
-                    setUsers(response.data.data)
+                    if (response && 'data' in response && response.data) {
+                        if ('data' in response.data && Array.isArray(response.data.data)) {
+                            setFetchingPlayer(false)
+                            setUsers(response.data.data as { id: number, name: string }[])
+                        }
+                    }
                 })
                 .catch((error) => {
                     console.log(error) // Stop loading
@@ -46,7 +51,7 @@ const SearchAddField = ({ form, append }: {
         } else {
             setUsers([])
         }
-    }, [query])
+    }, [query,dispatch])
     return (
         <FormItem className="w-full">
             <FormLabel>Players</FormLabel>
@@ -70,7 +75,7 @@ const SearchAddField = ({ form, append }: {
                     )}
                     <ul>
                         {users.map((player) => (
-                            <Button className="w-full flex justify-start" variant={"ghost"} key={player.name} onClick={(e) => {
+                            <Button className="w-full flex justify-start" variant={"ghost"} key={player.name} onClick={() => {
                                 append(player);
                                 setInput("")
 

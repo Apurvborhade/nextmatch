@@ -2,9 +2,9 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,8 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Loader } from "@/app/components/Loader";
-import { storeUser } from "@/features/users/userSlice";
-import { useDispatch } from "react-redux";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -21,8 +19,9 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession()
-
+  const searchparams = useSearchParams()
+  const { status } = useSession()
+  const callbackUrl = searchparams.get('callbackUrl')
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -39,7 +38,7 @@ export default function SignIn() {
       setError("Invalid credentials");
     } else {
       console.log("push")
-      router.push("/")
+      router.push(callbackUrl || '/dashboard')
     }
   };
 

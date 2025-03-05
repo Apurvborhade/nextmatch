@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/app/components/Loader";
 import Link from "next/link";
-import { authOptions } from "@/lib/authOptions";
 
 export default function SignUp() {
 
@@ -23,7 +22,7 @@ export default function SignUp() {
     const [name, setName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [userData, setUserData] = useState(null);
+    const [, setUserData] = useState(null);
     const router = useRouter();
 
     const { data: session, status } = useSession();

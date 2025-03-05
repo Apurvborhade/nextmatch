@@ -4,8 +4,7 @@ import { NextResponse } from "next/server";
 
 import prisma from "@/app/lib/prisma";
 import sendResponse from "@/app/lib/responseWrapper";
-
-const secret = process.env.NEXTAUTH_SECRET;
+import { headers } from "next/headers";
 
 
 
@@ -23,7 +22,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const { dribbling, passing, shooting, defending, speed } = skills as Skill
 
     console.log(typeof passing)
-
+    console.log(payload)
+    console.log(skills)
     const ratings = { dribbling, passing, shooting, defending, speed }
     try {
 
@@ -87,5 +87,28 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     } catch (error) {
         return errorHandler(error)
     }
-} 
+}
 
+
+export async function GET() {
+    const headersList = await headers()
+    const userData = JSON.parse(await headersList.get('X-User-Data') as string)
+
+    try {
+        const user = await prisma.user.findUnique({
+            include: {
+                skills: true,
+                teams: true
+            },
+            where: {
+                id: userData.id
+            }
+        })
+        if (!user) {
+            throw new AppError("Cannot find user", 404, true)
+        }
+        return sendResponse("success", user)
+    } catch (error) {
+        return errorHandler(error)
+    }
+}

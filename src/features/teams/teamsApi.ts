@@ -1,5 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
+export interface TeamResponse  {
+    name: string;
+    captainId: string;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
 export const teamsApi = createApi({
     reducerPath: "teamsApi",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/teams" }),
@@ -14,12 +20,8 @@ export const teamsApi = createApi({
                     captainId: body.captainId
                 }
             }),
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
-            transformErrorResponse: (
-                response,
-                meta,
-                arg,
-            ) => response.data,
+            transformResponse: (response: { data: TeamResponse }) => response.data,
+            transformErrorResponse: (response) => response.data,
         }),
         updateTeam: builder.mutation({
             query: ({ id, ...put }) => ({
@@ -27,27 +29,24 @@ export const teamsApi = createApi({
                 method: 'PUT',
                 body: put
             }),
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
-            transformErrorResponse: (
-                response: { status: string | number },
-                meta,
-                arg,
-            ) => response.status,
+            transformResponse: (response: { data: TeamResponse }) => response.data,
+            transformErrorResponse: (response: { status: string | number }) => response.status,
         }),
         deleteTeam: builder.mutation({
             query: ({ id }) => ({
                 url: `/${id}`,
                 method: 'DELETE',
             }),
-            transformResponse: (response: { data: any }, meta, arg) => response.data,
-            transformErrorResponse: (
-                response: { status: string | number },
-                meta,
-                arg,
-            ) => response.status,
+            transformResponse: (response: { data: TeamResponse }) => response.data,
+            transformErrorResponse: (response: { status: string | number }) => response.status,
         }),
-        
+        getTeams: builder.query<{ data: TeamResponse[] }, string>({
+            query: (teamName) => ({
+                url: `?teamName=${teamName}`,                
+            }),
+            transformResponse: (response: { data: TeamResponse[] }) => response
+        })
     })
 })
 
-export const { useCreateTeamMutation, useDeleteTeamMutation, useUpdateTeamMutation } = teamsApi
+export const { useCreateTeamMutation, useDeleteTeamMutation, useUpdateTeamMutation, useGetTeamsQuery } = teamsApi
