@@ -2,9 +2,9 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+
 import { useSession } from "next-auth/react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/app/components/Loader";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
 
@@ -23,47 +25,46 @@ export default function SignUp() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [, setUserData] = useState(null);
-    const router = useRouter();
-
+    const router = useRouter()
     const { data: session, status } = useSession();
-    useEffect(() => {
-        // if(status === 'authenticated') {
-        //     router.push("/dashboard")
-        // }
-        // console.log(session)
-    }, [session])
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        setIsLoading(true)
-        const response = await fetch("/api/auth/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, email, password }),
-        });
-        // Call your API to create the user
-        const data = await response.json();
-
-        if (!data.success) {
-            setIsLoading(false)
-            setError(data.message)
-        } else {
-            const result = await signIn("credentials", {
-                redirect: false, // Prevent automatic redirect to another page
-                email,
-                password,
+        try {
+            setIsLoading(true)
+            const response = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, email, password }),
             });
+            // Call your API to create the user
+            const data = await response.json();
             setIsLoading(false)
-            if (result?.error) {
-                setError(result.error);
+            if (typeof data === 'object' && 'success' in data &&  !data.success) {
+                console.log(data)
+                throw new Error(data.message)
             } else {
-
-                router.push("/")
+                setUserData(data)
+                toast.success("User registered successfully")
+                const result = await signIn("credentials", {
+                    redirect: false, // Prevent automatic redirect to another page
+                    email,
+                    password,
+                });
+                router.push('/dashboard')
             }
+        } catch (error) {
+            console.log(error)
+            if (error && typeof error === 'object' && 'message' in error) {
+                setError((error as any).message)
+            }
+            setIsLoading(false)
         }
-        setUserData(data)
+
+
+
+
 
     };
 
