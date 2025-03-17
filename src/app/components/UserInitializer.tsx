@@ -25,7 +25,7 @@ const UserInitializer = ({
 
     const dispatch = useDispatch()
     if (!alreadyUserExist) {
-        dispatch(storeUser(user))
+        dispatch(storeUser(user || userLogged))
     }
     
 
