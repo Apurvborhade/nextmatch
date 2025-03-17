@@ -8,8 +8,8 @@ import { decode } from "next-auth/jwt";
 import UserInitializer from "@/app/components/UserInitializer";
 import { Toaster } from "@/components/ui/sonner";
 import { ServiceInitializer } from "@/ServiceInitializer";
-
-
+import { Suspense } from "react";
+import Loading from "./components/Loading";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -39,19 +39,21 @@ export default async function RootLayout({
     token,
     secret: process.env.NEXTAUTH_SECRET as string
   })
-  
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
 
-        <Provider>
-          <ServiceInitializer />
-          <UserInitializer user={user} />
-          <Toaster />
-          {children}
-        </Provider>
+        <Suspense fallback={<Loading />}>
+          <Provider>
+            <ServiceInitializer />
+            <UserInitializer user={user} />
+            <Toaster />
+            {children}
+          </Provider>
+        </Suspense>
       </body>
     </html>
   );

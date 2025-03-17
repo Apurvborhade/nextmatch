@@ -52,7 +52,8 @@ export function Header() {
         <Link href="/dashboard" className="text-2xl font-bold ">
           NextMatch
         </Link>
-        <div className="flex justify-center w-full h-full">
+        {/* Search Box */}
+        {/* <div className="flex justify-center w-full h-full">
           <div className="flex items-center relative h-4/6 mt-auto mb-auto w-1/4">
             <Input
               type="text"
@@ -63,7 +64,7 @@ export function Header() {
               Search
             </Button>
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center space-x-4">
           <Popover>
             <PopoverTrigger asChild>
