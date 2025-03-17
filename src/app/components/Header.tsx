@@ -18,21 +18,32 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-const notifications = [
-  {
-    title: "Your call has been confirmed.",
-    description: "1 hour ago",
-  },
-  {
-    title: "You have a new message!",
-    description: "1 hour ago",
-  },
-  {
-    title: "Your subscription is expiring soon!",
-    description: "2 hours ago",
-  },
-]
+import useSocket from '../hooks/useSocket'
+import { useSelector } from 'react-redux'
+import { RootState } from '../store'
+import React from 'react'
+import { useGetNotificationsQuery } from '@/features/notifications/notificationsApi'
+
 export function Header() {
+  const { user } = useSelector((state: RootState) => state.user)
+  const [notifications, setNotifications] = React.useState<any[]>([])
+  const socket = useSocket()
+  const { data, isSuccess, error } = useGetNotificationsQuery(user && user.id)
+  React.useEffect(() => {
+    if (!socket) return;
+    console.log("🟢 Connected to socket");
+    if (data) {
+      setNotifications(data.data)
+    }
+    socket.on("notification", (data) => {
+      console.log("📩 New notification:", data);
+      setNotifications((prev) => [data, ...prev]);
+    });
+
+    return () => {
+      socket.off("notification");
+    };
+  }, [socket, data])
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-10 border-b">
       <div className="w-full  flex h-16 items-center justify-between px-4">
@@ -66,7 +77,7 @@ export function Header() {
               </CardHeader>
               <CardContent className="grid gap-4">
                 <div>
-                  {notifications.map((notification, index) => (
+                  {notifications && notifications.map((notification, index) => (
                     <div
                       key={index}
                       className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
