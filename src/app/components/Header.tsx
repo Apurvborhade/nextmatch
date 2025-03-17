@@ -24,6 +24,7 @@ import { RootState } from '../store'
 import React from 'react'
 import { useGetNotificationsQuery } from '@/features/notifications/notificationsApi'
 import { toast } from 'sonner'
+import { signOut } from 'next-auth/react'
 
 export function Header() {
   const { user } = useSelector((state: RootState) => state.user)
@@ -122,6 +123,7 @@ export function Header() {
               <DropdownMenuItem>Billing</DropdownMenuItem>
               <DropdownMenuItem>Team</DropdownMenuItem>
               <DropdownMenuItem>Subscription</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut({callbackUrl:"/auth/signin"})}>Log Out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
