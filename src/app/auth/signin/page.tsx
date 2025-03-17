@@ -32,7 +32,7 @@ export default function SignIn() {
       email,
       password,
     });
-
+    console.log(result)
     setIsLoading(false)
     if (result?.error) {
       setError("Invalid credentials");
