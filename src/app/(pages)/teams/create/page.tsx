@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { Loader } from "@/app/components/Loader";
+import { useSession } from "next-auth/react";
 
 
 
@@ -37,14 +38,16 @@ const formSchema = z.object({
 export default function CreateMatch() {
     const defaultPlayersValue: Player[] = []
     const { user } = useSelector((state: RootState) => state.user)
-    const [captainId,setCaptainId] = React.useState<string | undefined>("")
+    const [captainId, setCaptainId] = React.useState<string | undefined>("")
     const [createTeam, { data, isLoading, error }] = useCreateTeamMutation()
+    const { data: userData } = useSession()
 
-    
+
 
     useEffect(() => {
-        setCaptainId(user?.id as string)
-    },[user])
+        // setCaptainId(user?.id as string)
+        console.log(userData)
+    }, [user, userData])
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -65,10 +68,10 @@ export default function CreateMatch() {
         const playersId = values.players.map((player) => player.id)
         createTeam({
             name: values.name,
-            captainId:captainId,
             players: playersId,
+            captainId: userData?.user?.id,
         })
-        console.log(values.name,captainId,playersId)
+        console.log(values.name, captainId, playersId)
     }
     useEffect(() => {
         if (data != undefined) {
@@ -80,7 +83,7 @@ export default function CreateMatch() {
             })
             form.reset();
         }
-    },[data,form])
+    }, [data, form])
 
     return (
         <div className="w-full flex justify-center items-center">
@@ -129,7 +132,7 @@ export default function CreateMatch() {
                             </div>
 
                             {error ? <p className="text-red-700">{'message' in error ? error.message : null}</p> : null}
-                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>{isLoading ? (<Loader className=""/>) : 'Submit'}</Button>
+                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>{isLoading ? (<Loader className="" />) : 'Submit'}</Button>
                         </form>
                     </Form>
 
