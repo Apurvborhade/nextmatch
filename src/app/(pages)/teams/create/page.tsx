@@ -65,7 +65,7 @@ export default function CreateMatch() {
         const playersId = values.players.map((player) => player.id)
         createTeam({
             name: values.name,
-            captainId,
+            captainId:captainId,
             players: playersId,
         })
         console.log(values.name,captainId,playersId)

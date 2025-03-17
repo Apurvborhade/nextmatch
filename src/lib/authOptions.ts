@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            
+
             // @ts-expect-error - CredentialsProvider type definition is incomplete
             async authorize(credentials): Promise<{
                 id: string;
@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
                 httpOnly: true,
                 sameSite: "strict",
                 path: "/",
-                secure: process.env.NODE_ENV === "production",
+                secure: process.env.NODE_ENV === "production" && process.env.NEXTAUTH_URL?.startsWith("https"),
             },
         },
     },
