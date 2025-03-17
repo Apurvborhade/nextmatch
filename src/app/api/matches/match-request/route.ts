@@ -5,6 +5,7 @@ import sendResponse from "@/app/lib/responseWrapper";
 import { matchRequestNotificationData, MatchRequestNotificationType } from "@/app/lib/notificationConfig";
 import { publishMessage } from "@/app/lib/rabbitmq/publisher";
 import RABBITMQ_CONFIG from "@/app/lib/rabbitmq/config";
+import { NextRequest } from "next/server";
 
 
 /**
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
     const { senderId, receiverId, message, matchId } = await req.json();
 
     try {
-        if(senderId == receiverId) {
+        if (senderId == receiverId) {
             throw new AppError("Sender and Receiver IDs needs to be different", 400, false);
         }
         // Validate required fields
@@ -114,5 +115,42 @@ export async function POST(req: Request) {
         return sendResponse("success", matchRequest, "Match request sent");
     } catch (error) {
         return errorHandler(error);
+    }
+}
+
+export async function GET(req: NextRequest) {
+    const requestId = req.nextUrl.searchParams.get('requestId')
+
+    try {
+        if (!requestId)
+            throw new AppError("Cannot find match request", 404, true)
+
+
+        const matchRequest = await prisma.matchRequest.findUnique({
+            where: {
+                id: requestId
+            },
+            include: {
+                sender: true,
+                match: {
+                    include: {
+                        team1: true,
+                        team2: {
+                            include: {
+                                players: true
+                            }
+                        },
+                        Turf: true
+                    }
+                }
+            }
+        })
+
+        if (!matchRequest) {
+            throw new AppError("Cannot find match request", 404, true)
+        }
+        return sendResponse("success", matchRequest)
+    } catch (error) {
+        return errorHandler(error)
     }
 }

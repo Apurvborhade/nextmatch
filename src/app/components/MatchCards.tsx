@@ -165,8 +165,8 @@ export function MatchCards({ matches, isLoading }: { matches: Match[], isLoading
               <Dialog>
                 <DialogTrigger asChild>
                   {!match.team2 ? (
-                    <Button className='rounded-full'>
-                        Send Match Request
+                    <Button className='rounded-full' disabled={user?.id === match.team1.captainId}>
+                        {user?.id === match.team1.captainId ? 'Created by you': 'Send Match Request'}
                     </Button>
                   ):(
                     <Button className='rounded-full' disabled>

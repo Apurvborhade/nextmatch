@@ -68,6 +68,7 @@ export default function CreateMatch() {
             captainId,
             players: playersId,
         })
+        console.log(values.name,captainId,playersId)
     }
     useEffect(() => {
         if (data != undefined) {

@@ -3,6 +3,7 @@ import RABBITMQ_CONFIG from '../config';
 import prisma from '@/app/lib/prisma';
 import { MatchRequestNotificationType } from '../../notificationConfig';
 import sendMaillWithTemplate from '@/app/services/mail';
+import { getSocketInstance } from '../../socket';
 
 const templateId = {
     requestSent: "d-c640f3eb09a9408c9301d406dd0c15ca",
@@ -10,6 +11,7 @@ const templateId = {
     requestDeclined: "d-d685b6ac2b844230979d8d5c2fea466f"
 }
 export async function processNotificationQueue() {
+    const io = getSocketInstance();
     await consumeMessages<{
         title: string;
         description: string;
@@ -50,6 +52,17 @@ export async function processNotificationQueue() {
                 userId: user?.captain?.id,
             }
         })
+
+        const notificationData = {
+            title,
+            description,
+            userId: user?.captain?.id,
+            status,
+            matchDetails,
+            matchRequestId,
+        };
+    io.to(user?.captain?.id).emit("notification", notificationData);
+
 
         if (status === MatchRequestNotificationType.SENT) {
             await sendMaillWithTemplate(user?.captain?.email, templateId.requestSent, {

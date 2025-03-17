@@ -19,6 +19,9 @@ export const matchesApi = createApi({
             query: () => ({ url: "/" }),
             providesTags: ['Match']
         }),
+        getMatchReqDetails: builder.query({
+            query: (requestId) => ({ url: `/match-request?requestId=${requestId}` }),
+        }),
         createMatch: builder.mutation({
             query: ({ ...body }) => ({
                 url: '/',
@@ -30,7 +33,7 @@ export const matchesApi = createApi({
             transformErrorResponse: (
                 response: { status: string | number }
             ) => response.status,
-            
+
         }),
         deleteMatch: builder.mutation({
             query: ({ id }) => ({
@@ -61,12 +64,12 @@ export const matchesApi = createApi({
                 return { message: 'An unknown error occurred' };
             }
         }),
-        matchRequestAccept:builder.mutation({
-            query:(requestId) => ({
-                url:`/match-request/accept?requestId=${requestId}`,
-                method:'PATCH'
+        matchRequestAccept: builder.mutation({
+            query: (requestId) => ({
+                url: `/match-request/accept?requestId=${requestId}`,
+                method: 'PATCH'
             }),
-            invalidatesTags:['Match'],
+            invalidatesTags: ['Match'],
             transformErrorResponse: (
                 response: FetchBaseQueryError
             ) => {
@@ -78,12 +81,12 @@ export const matchesApi = createApi({
                 return { message: 'An unknown error occurred' };
             }
         }),
-        matchRequestDecline:builder.mutation({
-            query:(requestId) => ({
-                url:`/match-request/decline?requestId=${requestId}`,
-                method:'PATCH'
+        matchRequestDecline: builder.mutation({
+            query: (requestId) => ({
+                url: `/match-request/decline?requestId=${requestId}`,
+                method: 'PATCH'
             }),
-            invalidatesTags:['Match'],
+            invalidatesTags: ['Match'],
 
             transformErrorResponse: (
                 response: FetchBaseQueryError
@@ -99,4 +102,4 @@ export const matchesApi = createApi({
     })
 })
 
-export const { useCreateMatchMutation, useDeleteMatchMutation, useGetAllMatchesQuery, useSendMatchRequestMutation,useMatchRequestAcceptMutation,useMatchRequestDeclineMutation } = matchesApi
+export const { useCreateMatchMutation, useDeleteMatchMutation, useGetAllMatchesQuery, useSendMatchRequestMutation, useMatchRequestAcceptMutation, useMatchRequestDeclineMutation,useGetMatchReqDetailsQuery } = matchesApi
