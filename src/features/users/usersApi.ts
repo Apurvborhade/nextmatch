@@ -48,18 +48,18 @@ interface User {
 export const usersApi = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({ baseUrl: "/api/user" }),
-    tagTypes:['User'],
+    tagTypes: ['User'],
     endpoints: (builder) => ({
         getUsers: builder.query<User[], string>({
             query: (query) => ({ url: `?username=${query}` })
         }),
         getUserData: builder.query<User, string>({
             query: (id) => ({ url: `/${id}` }),
-            providesTags:['User']
+            providesTags: ['User']
         }),
         getMatches: builder.query<MatchResponse, null>({
             query: () => ({ url: `/matches` }),
-            providesTags:['User']
+            providesTags: ['User']
         }),
         getCompletedMatches: builder.query<MatchResponse, null>({
             query: () => ({ url: `/completed-matches` })
@@ -70,13 +70,14 @@ export const usersApi = createApi({
                 method: 'PUT',
                 body: body
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
         }),
 
         findTeams: builder.query<TeamResponse, string>({
             query: (id) => ({
                 url: `/${id}/getteams`
-            })
+            }),
+            providesTags: ['User']
         })
 
     })
