@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../store'
 import React from 'react'
 import { useGetNotificationsQuery } from '@/features/notifications/notificationsApi'
+import { toast } from 'sonner'
 
 export function Header() {
   const { user } = useSelector((state: RootState) => state.user)
@@ -38,6 +39,7 @@ export function Header() {
     socket.on("notification", (data) => {
       console.log("📩 New notification:", data);
       setNotifications((prev) => [data, ...prev]);
+      toast.success("New Notification")
     });
 
     return () => {
