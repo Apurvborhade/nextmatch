@@ -9,14 +9,26 @@ import { Loader } from './Loader'
 import { Textarea } from '@/components/ui/textarea'
 import { useSendMatchRequestMutation } from '@/features/matches/matchesApi'
 import { toast } from 'sonner'
+import { useSession } from 'next-auth/react'
 
 
 const MatchRequestDialog = ({ receiverId, matchId }: { receiverId: string, matchId: string }) => {
-    const user = useSelector((state: RootState) => state.user.user)
+    const { user } = useSession().data || {}
     const [teamId, setTeamId] = useState<string>('')
+    const [userId, setUserId] = useState<string | undefined>()
     const [message, setMessage] = useState<string>('')
-    const { data, isLoading } = useFindTeamsQuery(user?.id as string)
+    const { data, isLoading } = useFindTeamsQuery(userId as string, {
+        skip: !userId,
+        refetchOnMountOrArgChange: true,
+    })
+
+    useEffect(() => {
+        if (user) {
+            setUserId(user.id)
+        }
+    }, [user])
     const [sendMatchRequest, { isLoading: RequestSending, error: RequestError, isSuccess }] = useSendMatchRequestMutation();
+
     const valueChange = (value: string) => {
         setTeamId(value)
     }
@@ -33,8 +45,6 @@ const MatchRequestDialog = ({ receiverId, matchId }: { receiverId: string, match
         } catch (error) {
             console.log(error)
         }
-
-
     }
     useEffect(() => {
         if (RequestError) {
