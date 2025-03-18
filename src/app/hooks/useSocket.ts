@@ -2,7 +2,7 @@ import { useGetNotificationsQuery } from "@/features/notifications/notifications
 import { useEffect, useRef, useState } from "react";
 import { io,Socket } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:5000"; // Ensure this matches your backend
+const SOCKET_URL = "http://localhost:3000"; // Ensure this matches your backend
 
 let socketInstance: Socket | null = null;
 
