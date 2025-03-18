@@ -21,9 +21,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const { age, position, bio, skills } = payload;
     const { dribbling, passing, shooting, defending, speed } = skills as Skill
 
-    console.log(typeof passing)
-    console.log(payload)
-    console.log(skills)
     const ratings = { dribbling, passing, shooting, defending, speed }
     try {
 

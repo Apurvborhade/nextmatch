@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-interface Team {
+export interface Team {
     id: string,
     name: string,
     captainId: string,

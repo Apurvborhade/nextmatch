@@ -35,13 +35,9 @@ export async function POST(req: Request) {
 
         const { name, players, captainId } = body;
 
-        console.log(body)
-
         if (!body || typeof body !== 'object') {
-            console.log("error in !body")
             throw new AppError("Payload must be a valid object.", 400, false);
         }
-        console.log(name,players,captainId)
         if (!name || !captainId) {
             throw new AppError("Enter all details", 400, false);
         }

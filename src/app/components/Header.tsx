@@ -123,7 +123,7 @@ export function Header() {
               <DropdownMenuItem>Billing</DropdownMenuItem>
               <DropdownMenuItem>Team</DropdownMenuItem>
               <DropdownMenuItem>Subscription</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => signOut({callbackUrl:"/auth/signin"})}>Log Out</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })}>Log Out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

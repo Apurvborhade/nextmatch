@@ -1,16 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { useFindTeamsQuery } from '@/features/users/usersApi'
+import { Team, useFindTeamsQuery } from '@/features/users/usersApi'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
-
+import { useSession } from 'next-auth/react'
 const Teams = () => {
-    const { user } = useSelector((state: RootState) => state.user)
-    const { data, isLoading } = useFindTeamsQuery(user?.id as string)
+    const { user } = useSession().data || {}
+    const [userId, setUserId] = useState<string | undefined>()
+    const { data, isLoading, refetch } = useFindTeamsQuery(userId as string ?? "", {
+        skip: !userId,
+        refetchOnMountOrArgChange: true,
+    })
+
+    useEffect(() => {
+        if (user) {
+            setUserId(user.id)
+        }
+    }, [user, isLoading])
 
     return (
         <Card>

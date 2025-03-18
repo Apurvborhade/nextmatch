@@ -44,10 +44,6 @@ export default function CreateMatch() {
 
 
 
-    useEffect(() => {
-        // setCaptainId(user?.id as string)
-        console.log(userData)
-    }, [user, userData])
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -71,7 +67,7 @@ export default function CreateMatch() {
             players: playersId,
             captainId: userData?.user?.id,
         })
-        console.log(values.name, captainId, playersId)
+
     }
     useEffect(() => {
         if (data != undefined) {
@@ -132,7 +128,7 @@ export default function CreateMatch() {
                             </div>
 
                             {error ? <p className="text-red-700">{'message' in error ? error.message : null}</p> : null}
-                            <Button className="mt-10" type="submit" onClick={() => console.log(form.formState.errors)}>{isLoading ? (<Loader className="" />) : 'Submit'}</Button>
+                            <Button className="mt-10" type="submit">{isLoading ? (<Loader className="" />) : 'Submit'}</Button>
                         </form>
                     </Form>
 

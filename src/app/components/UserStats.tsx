@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../store'
 import { useGetUserDataQuery } from '@/features/users/usersApi'
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 interface chartDataSkel {
   skill: string,
@@ -24,10 +25,18 @@ const chartConfig = {
 
 
 export function UserStats() {
-  const user = useSelector((state: RootState) => state.user.user);
+  const { user } = useSession().data || {};
+  const [userId, setUserId] = useState<string | undefined>()
   const [chartData, setChartData] = useState<chartDataSkel[]>()
-  const { data } = useGetUserDataQuery(user?.id as string)
-
+  const { data } = useGetUserDataQuery(userId as string ?? "", {
+    skip: !userId,
+    refetchOnMountOrArgChange: true,
+  })
+  useEffect(() => {
+    if (user) {
+      setUserId(user.id)
+    }
+  }, [user])
 
   useEffect(() => {
     if (data) {
