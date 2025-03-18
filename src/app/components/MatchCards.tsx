@@ -29,7 +29,6 @@ export function MatchCards({ matches, isLoading }: { matches: Match[], isLoading
   const filterMatches = (status: string) => {
     if (status === 'createdByMe') {
       setFilteredMatches(matches.filter((match) => match.team1.captainId === user?.id))
-      console.log(filteredMatches)
     } else if (status === 'all') {
       setFilteredMatches(matches)
     } else {

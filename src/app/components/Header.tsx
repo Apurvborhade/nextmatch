@@ -29,24 +29,24 @@ import { signOut } from 'next-auth/react'
 export function Header() {
   const { user } = useSelector((state: RootState) => state.user)
   const [notifications, setNotifications] = React.useState<any[]>([])
-  const socket = useSocket()
+  // const socket = useSocket()
   const { data, isSuccess, error } = useGetNotificationsQuery(user && user.id)
-  React.useEffect(() => {
-    if (!socket) return;
-    console.log("🟢 Connected to socket");
-    if (data) {
-      setNotifications(data.data)
-    }
-    socket.on("notification", (data) => {
-      console.log("📩 New notification:", data);
-      setNotifications((prev) => [data, ...prev]);
-      toast.success("New Notification")
-    });
+  // React.useEffect(() => {
+  //   if (!socket) return;
+  //   console.log("🟢 Connected to socket");
+  //   if (data) {
+  //     setNotifications(data.data)
+  //   }
+  //   socket.on("notification", (data) => {
+  //     console.log("📩 New notification:", data);
+  //     setNotifications((prev) => [data, ...prev]);
+  //     toast.success("New Notification")
+  //   });
 
-    return () => {
-      socket.off("notification");
-    };
-  }, [socket, data])
+  //   return () => {
+  //     socket.off("notification");
+  //   };
+  // }, [socket, data])
   return (
     <header className="fixed top-0 left-0 right-0 bg-background z-10 border-b">
       <div className="w-full  flex h-16 items-center justify-between px-4">

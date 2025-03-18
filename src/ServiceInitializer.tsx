@@ -6,7 +6,7 @@ import { createServer } from 'http';
 let initialized = false;
 export function ServiceInitializer() {
     if (typeof window === 'undefined' && !initialized) {
-        initializeSocket()
+        // initializeSocket()
         console.log("Initializing services...");
         initializeServices().catch((error) => {
             console.error("Failed to initialize services:", error);

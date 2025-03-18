@@ -42,7 +42,6 @@ export default function SignUp() {
             const data = await response.json();
             setIsLoading(false)
             if (typeof data === 'object' && 'success' in data &&  !data.success) {
-                console.log(data)
                 throw new Error(data.message)
             } else {
                 setUserData(data)
@@ -55,7 +54,6 @@ export default function SignUp() {
                 router.push('/dashboard')
             }
         } catch (error) {
-            console.log(error)
             if (error && typeof error === 'object' && 'message' in error) {
                 setError((error as any).message)
             }

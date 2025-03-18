@@ -19,7 +19,6 @@ const MatchRequestDialog = ({ receiverId, matchId }: { receiverId: string, match
     const [sendMatchRequest, { isLoading: RequestSending, error: RequestError, isSuccess }] = useSendMatchRequestMutation();
     const valueChange = (value: string) => {
         setTeamId(value)
-        console.log(teamId)
     }
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

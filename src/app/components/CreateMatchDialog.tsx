@@ -71,7 +71,6 @@ const CreateMatchDialog = () => {
             setShowInputTeam(true)
             setTeamNameInput("")
         } catch (error) {
-            console.log(error)
             toast.error(`There was error in creating new match`);
         }
 
@@ -137,9 +136,6 @@ const CreateMatchDialog = () => {
 
     const teamdetails = watch('team')
 
-    useEffect(() => {
-        console.log(teamdetails)
-    }, [teamdetails])
     return (
         <Dialog>
             <DialogTrigger asChild>

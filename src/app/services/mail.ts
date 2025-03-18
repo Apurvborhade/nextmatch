@@ -1,9 +1,8 @@
 import sgMail from '@sendgrid/mail'
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY as string
-console.log(SENDGRID_API_KEY)
 sgMail.setApiKey(SENDGRID_API_KEY);
-console.log(sgMail)
+
 export default async function sendMaillWithTemplate(
     toEmail: string,
     templateId: string,

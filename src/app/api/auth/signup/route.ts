@@ -10,7 +10,6 @@ export async function POST(req: Request) {
     try {
         const { email, password, name } = await req.json();
 
-        console.log(email, password, name)
         if (!email || !password || !name) {
             throw new AppError("Missing required fields", 400, false)
         }

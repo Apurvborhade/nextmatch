@@ -33,14 +33,10 @@ const MatchRequestAccept = () => {
         : pathname;
     React.useEffect(() => {
         if (status === "unauthenticated") {
-            console.log(status)
             redirect(`/auth/signin?callbackUrl=${encodeURIComponent(asPath)}`)
         }
     }, [status, asPath])
 
-    React.useEffect(() => {
-        console.log(data)
-    }, [data])
     const [accept, { isLoading: ACCEPT_LOADING, error: ACCEPT_ERROR, isSuccess: ACCEPT_SUCCESS }] = useMatchRequestAcceptMutation()
     const [decline, { isLoading: DECLINE_LOADING, error: DECLINE_ERROR, isSuccess: DECLINE_SUCCESS }] = useMatchRequestDeclineMutation()
 
