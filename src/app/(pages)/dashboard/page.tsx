@@ -16,10 +16,15 @@ export default function DashboardLayout() {
         <div className="space-y-8">
             <div className='flex items-center w-full'>
 
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <Link href={'/dashboard/edit-profile'} className='ml-auto'>
-                <Button>Edit profile</Button>
-            </Link>
+                <h1 className="text-3xl font-bold">Dashboard</h1>
+                <div className='ml-auto'>
+                    <Link href={'/matches'} className='mr-2'>
+                        <Button variant={'outline'}>View all matches</Button>
+                    </Link>
+                    <Link href={'/dashboard/edit-profile'} className='ml-auto'>
+                        <Button>Edit profile</Button>
+                    </Link>
+                </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-3 relative">
