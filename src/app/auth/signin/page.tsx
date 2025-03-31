@@ -51,9 +51,9 @@ export default function SignIn() {
               <Loader className="absolute right-1/2 top-1/2" />
             ) : null}
             <CardHeader>
-              <CardTitle className="text-2xl">Sign Up</CardTitle>
+              <CardTitle className="text-2xl">Sign In</CardTitle>
               <CardDescription>
-                Enter Your details below to Signup
+                Enter Your details below to Signin
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -73,12 +73,6 @@ export default function SignIn() {
                   <div className="grid gap-2">
                     <div className="flex items-center">
                       <Label htmlFor="password">Password</Label>
-                      <a
-                        href="#"
-                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                      >
-                        Forgot your password?
-                      </a>
                     </div>
                     <Input
                       id="password"
@@ -92,9 +86,6 @@ export default function SignIn() {
                     Login
                   </Button>
                   {error && <div style={{ color: "red" }}>{error}</div>}
-                  <Button variant="outline" className="w-full">
-                    Login with Google
-                  </Button>
                 </div>
                 <div className="mt-4 text-center text-sm">
                   Don&apos;t have an account?{" "}

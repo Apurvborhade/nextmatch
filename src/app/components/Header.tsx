@@ -115,14 +115,8 @@ export function Header() {
               <User className="scale-100" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mr-2 mt-2">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <Link href={'/dashboard'}>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-              </Link>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/auth/signin" })}>Log Out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
